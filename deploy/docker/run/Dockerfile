@@ -13,7 +13,8 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
     PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
     LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8
+    LC_ALL=C.UTF-8 \
+    APPLICATION_RUN_TYPE=production
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends git tini \

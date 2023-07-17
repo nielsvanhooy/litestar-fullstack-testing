@@ -226,7 +226,7 @@ def create_user(
         superuser: bool = False,
     ) -> None:
         obj_in = UserCreate(
-            email=EmailStr(email),
+            email=email,
             name=name,
             password=password,
             is_superuser=superuser,

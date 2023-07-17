@@ -54,6 +54,7 @@ sqlalchemy = {git = "https://github.com/sqlalchemy/sqlalchemy.git", branch = "ma
 uvicorn = {version = "*", extras = ['standard']}
 psycopg = {extras = ["binary", "pool"], version = "^3.1.9"}
 phantom-communicator = {git = "https://github.com/nielsvanhooy/phantom_communicator.git"}
+pydantic-extra-types = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 asgi-lifespan = "*"
