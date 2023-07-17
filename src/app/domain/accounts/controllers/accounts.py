@@ -105,7 +105,7 @@ class AccountController(Controller):
             description="The user to update.",
         ),
     ) -> User:
-        """Create a new user."""
+        """Update a user."""
         obj = data.create_instance()
         db_obj = await users_service.update(user_id, obj.__dict__)
         return users_service.to_dto(db_obj)

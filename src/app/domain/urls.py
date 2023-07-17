@@ -31,7 +31,9 @@ STATS_WEEKLY_NEW_USERS = "/api/stats/weekly-new-users"
 
 ########## CPES
 
-LIST_CPES = "/api/cpes"
-CREATE_CPE = "/api/cpes"
-DELETE_CPE = "/api/cpes/{device_id:str}"
-READOUT_CPE = "/api/cpes/{device_id:str}/readout"
+CPES_LIST = "/api/cpes"
+CPES_DETAIL = "/api/cpes/{device_id:str}"
+CPES_CREATE = "/api/cpes"
+CPES_DELETE = "/api/cpes/{device_id:str}"
+CPES_READOUT = "/api/cpes/{device_id:str}/readout"
+CPES_UPDATE = "/api/cpes/{device_id:str}"

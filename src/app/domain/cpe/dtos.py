@@ -12,6 +12,8 @@ __all__ = [
     "CreateCpeDTO",
     "ReadoutCPE",
     "ReadoutCpeDTO",
+    "UpdateCPE",
+    "CPEUpdateDTO",
 ]
 
 
@@ -33,18 +35,33 @@ class CreateCPE:
     sec_mgmt_ip: str | None = None
 
 
-@dataclass
-class ReadoutCPE:
-    device_id: str
-
-
 class CreateCpeDTO(DataclassDTO[CreateCPE]):
     """Create CPE."""
 
     config = dto.config(rename_strategy="lower")
 
 
+@dataclass
+class ReadoutCPE:
+    device_id: str
+
+
 class ReadoutCpeDTO(DataclassDTO[ReadoutCPE]):
     """Readout CPE."""
 
     config = dto.config(rename_strategy="lower")
+
+
+@dataclass
+class UpdateCPE:
+    device_id: str | None = None
+    routername: str | None = None
+    os: str | None = None
+    mgmt_ip: str | None = None
+    sec_mgmt_ip: str | None = None
+
+
+class CPEUpdateDTO(DataclassDTO[UpdateCPE]):
+    """User Update."""
+
+    config = dto.config()

@@ -170,6 +170,7 @@ async def _seed_db(
     sessionmaker: async_sessionmaker[AsyncSession],
     raw_users: list[User | dict[str, Any]],
     raw_teams: list[Team | dict[str, Any]],
+    raw_cpes: list[Team | dict[str, Any]],
 ) -> AsyncIterator[None]:
     """Populate test database with.
 
@@ -178,10 +179,12 @@ async def _seed_db(
         sessionmaker: The SQLAlchemy sessionmaker factory.
         raw_users: Test users to add to the database
         raw_teams: Test teams to add to the database
+        raw_cpes: Test CPES to add to the database
 
     """
 
     from app.domain.accounts.services import UserService
+    from app.domain.cpe.services import CpeService
     from app.domain.teams.services import TeamService
     from app.lib.db import orm  # pylint: disable=[import-outside-toplevel,unused-import]
 
@@ -196,6 +199,10 @@ async def _seed_db(
         for raw_team in raw_teams:
             await teams_services.create(raw_team)
         await teams_services.repository.session.commit()
+    async with CpeService.new(sessionmaker()) as cpes_services:
+        for raw_cpe in raw_cpes:
+            await cpes_services.create(raw_cpe)
+        await cpes_services.repository.session.commit()
 
     yield
 

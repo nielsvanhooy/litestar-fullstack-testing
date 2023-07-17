@@ -225,12 +225,13 @@ def create_user(
         password: str,
         superuser: bool = False,
     ) -> None:
-
         class Email(BaseModel):
             email: EmailStr
 
+        validate_email = Email(email=email)
+
         obj_in = UserCreate(
-            email=Email(email),
+            email=validate_email.email,
             name=name,
             password=password,
             is_superuser=superuser,

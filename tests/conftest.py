@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from pytest import FixtureRequest, MonkeyPatch
 
     from app.domain.accounts.models import User
+    from app.domain.cpe.models import CPE
     from app.domain.teams.models import Team
 
 
@@ -74,6 +75,28 @@ def fx_is_unit_test(request: FixtureRequest) -> bool:
     """
     unittest_pattern: str = request.config.getini("unit_test_pattern")  # pyright:ignore
     return bool(re.search(unittest_pattern, str(request.path)))
+
+
+@pytest.fixture(name="raw_cpes")
+def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
+    """Unstructured cpe representations."""
+
+    return [
+        {
+            "device_id": "TESM1233",
+            "routername": "tes-gv-1111xx-11",
+            "os": "iosxe",
+            "mgmt_ip": "10.1.1.142",
+            "sec_mgmt_ip": None,
+        },
+        {
+            "device_id": "TESM1234",
+            "routername": "tes-gv-2222xx-22",
+            "os": "iosxe",
+            "mgmt_ip": "10.1.1.156",
+            "sec_mgmt_ip": None,
+        },
+    ]
 
 
 @pytest.fixture(name="raw_users")
