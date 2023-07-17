@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from litestar.contrib.sqlalchemy.dto import SQLAlchemyDTO
 from litestar.dto.factory.stdlib.dataclass import DataclassDTO
-from pydantic import EmailStr
 
 from app.domain.accounts.models import User
 from app.lib import dto
@@ -44,7 +43,7 @@ class UserDTO(SQLAlchemyDTO[User]):
 
 @dataclass
 class UserCreate:
-    email: EmailStr
+    email: str
     password: str
     name: str | None = None
     is_superuser: bool = False

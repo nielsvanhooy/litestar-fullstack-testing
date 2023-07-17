@@ -6,7 +6,7 @@ from typing import Any
 import anyio
 import click
 from click import echo
-from pydantic import EmailStr
+from pydantic import BaseModel, EmailStr
 from rich import get_console
 from rich.prompt import Confirm
 
@@ -225,8 +225,12 @@ def create_user(
         password: str,
         superuser: bool = False,
     ) -> None:
+
+        class Email(BaseModel):
+            email: EmailStr
+
         obj_in = UserCreate(
-            email=email,
+            email=Email(email),
             name=name,
             password=password,
             is_superuser=superuser,
