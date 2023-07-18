@@ -17,13 +17,17 @@ from app.domain.analytics.dtos import NewUsersByWeek
 from app.domain.cpe.models import CPE
 from app.domain.tags.models import Tag
 from app.domain.teams.models import Team
-from app.lib import settings, worker, email
+from app.lib import email, settings, worker
 from app.lib.service.generic import Service
 from app.lib.worker.controllers import WorkerController
 
 from . import accounts, analytics, cpe, openapi, plugins, security, system, tags, teams, urls, web
-from .domain_tasks import domain_background_tasks, domain_system_tasks, domain_cron_system_tasks, domain_cron_background_tasks
-
+from .domain_tasks import (
+    domain_background_tasks,
+    domain_cron_background_tasks,
+    domain_cron_system_tasks,
+    domain_system_tasks,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -66,31 +70,27 @@ __all__ = [
     "signature_namespace",
 ]
 
-system_tasks = [
-    worker.tasks.system_task,
-    worker.tasks.system_upkeep,
-] + domain_system_tasks
+system_tasks = [worker.tasks.system_task, worker.tasks.system_upkeep, *domain_system_tasks]
 
-background_tasks = [
-    worker.tasks.background_worker_task,
-    email.send_email,
-] + domain_background_tasks
+background_tasks = [worker.tasks.background_worker_task, email.send_email, *domain_background_tasks]
 
 cron_system_tasks = [
-    worker.CronJob(function=worker.tasks.system_upkeep, unique=True, cron="0 * * * *", timeout=500)
-] + domain_cron_system_tasks
+    worker.CronJob(function=worker.tasks.system_upkeep, unique=True, cron="0 * * * *", timeout=500),
+    *domain_cron_system_tasks,
+]
 
 cron_background_tasks = [
     worker.CronJob(function=worker.tasks.background_worker_task, unique=True, cron="* * * * *", timeout=300),
-] + domain_cron_background_tasks
+    *domain_cron_background_tasks,
+]
 
 tasks: dict[worker.Queue, list[worker.WorkerFunction]] = {
-    worker.queues.get("system-tasks"): system_tasks, # type: ignore[dict-item]
-    worker.queues.get("background-tasks"): background_tasks, # type: ignore[dict-item]
+    worker.queues.get("system-tasks"): system_tasks,  # type: ignore[dict-item]
+    worker.queues.get("background-tasks"): background_tasks,  # type: ignore[dict-item]
 }
 scheduled_tasks: dict[worker.Queue, list[worker.CronJob]] = {
-    worker.queues.get("system-tasks"): cron_system_tasks, # type: ignore[dict-item]
-    worker.queues.get("background-tasks"): cron_background_tasks, # type: ignore[dict-item]
+    worker.queues.get("system-tasks"): cron_system_tasks,  # type: ignore[dict-item]
+    worker.queues.get("background-tasks"): cron_background_tasks,  # type: ignore[dict-item]
 }
 
 

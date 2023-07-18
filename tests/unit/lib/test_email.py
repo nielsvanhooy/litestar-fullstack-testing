@@ -11,7 +11,8 @@ async def test_send_email():
     # Enable Suppress send to mock the sending.
     mail_system.config.SUPPRESS_SEND = 1
     with mail_system.record_messages() as outbox:
-        await send_email(subject=subject, to=to, html=html)
+        # the ctx is a fake argument. normally needed for SAQ background worker
+        await send_email("ctx", subject=subject, to=to, html=html)
 
     assert outbox[0]["subject"] == subject
     assert outbox[0]["to"] == "lala@lala.nl, loeloe@loeloe.nl"
@@ -28,6 +29,7 @@ async def test_send_email_with_file():
     # Enable Suppress send to mock the sending.
     mail_system.config.SUPPRESS_SEND = 1
     with mail_system.record_messages() as outbox:
-        await send_email(subject=subject, to=to, html=html, attachments=attachment)
+        # the ctx is a fake argument. normally needed for SAQ background worker
+        await send_email("ctx", subject=subject, to=to, html=html, attachments=attachment)
 
     assert outbox[0]._payload[1].__dict__.get("_headers")[3][1] == "attachment; filename*=UTF8''plain.txt"

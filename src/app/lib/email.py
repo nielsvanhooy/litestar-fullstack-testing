@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from fastapi_mail import MessageSchema, MessageType, FastMail, ConnectionConfig
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 
 from app.lib import settings
 
 mail_system = FastMail(ConnectionConfig(**settings.email.model_dump()))
 
-__all__ = [
-    "send_email"
-]
+__all__ = ["send_email"]
+
 
 async def send_email(ctx, *, subject: str, to: list, html: str, attachments: list | None = None) -> bool:
     """Args:
