@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from sqlalchemy.pool import NullPool
 
 from app.domain.accounts.models import User
+from app.domain.cpe.models import CPE
 from app.domain.security import auth
 from app.domain.teams.models import Team
 from app.lib import db, worker
@@ -170,7 +171,7 @@ async def _seed_db(
     sessionmaker: async_sessionmaker[AsyncSession],
     raw_users: list[User | dict[str, Any]],
     raw_teams: list[Team | dict[str, Any]],
-    raw_cpes: list[Team | dict[str, Any]],
+    raw_cpes: list[CPE | dict[str, Any]],
 ) -> AsyncIterator[None]:
     """Populate test database with.
 

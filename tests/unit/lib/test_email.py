@@ -3,7 +3,7 @@ from pathlib import Path
 from app.lib.email import mail_system, send_email
 
 
-async def test_send_email():
+async def test_send_email() -> None:
     subject = "test-mail"
     to = ["lala@lala.nl", "loeloe@loeloe.nl"]
     html = """<p>Hi this test mail, thanks for using litestar-mail</p> """
@@ -18,7 +18,7 @@ async def test_send_email():
     assert outbox[0]["to"] == "lala@lala.nl, loeloe@loeloe.nl"
 
 
-async def test_send_email_with_file():
+async def test_send_email_with_file() -> None:
     subject = "test-mail"
     to = ["lala@lala.nl", "loeloe@loeloe.nl"]
     html = """<p>Hi this test mail, thanks for using litestar-mail</p> """

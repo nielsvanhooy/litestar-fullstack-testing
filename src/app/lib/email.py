@@ -11,6 +11,7 @@ __all__ = ["send_email"]
 
 async def send_email(ctx, *, subject: str, to: list, html: str, attachments: list | None = None) -> bool:
     """Args:
+        ctx: an argument of SAQ worker
         subject: str = a subject for the email
         to: list of recipients
         html: the html string to send
