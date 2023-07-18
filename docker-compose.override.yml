@@ -18,6 +18,7 @@ services:
     container_name: localmail
     ports:
       - "8025:8025"
+      - "1025:1025"
   app:
     build:
       context: .

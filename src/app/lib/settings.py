@@ -8,7 +8,7 @@ from typing import Any, Final, Literal
 
 from dotenv import load_dotenv
 from litestar.data_extractors import RequestExtractorField, ResponseExtractorField  # noqa: TCH002
-from pydantic import ValidationError, field_validator
+from pydantic import DirectoryPath, EmailStr, ValidationError, conint, field_validator
 from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
@@ -218,11 +218,11 @@ class OpenAPISettings(BaseSettings):
         env_file=".env", env_file_encoding="utf-8", env_prefix="OPENAPI_", case_sensitive=False
     )
 
-    CONTACT_NAME: str = "Cody"
+    CONTACT_NAME: str = "Niels van Hooij"
     """Name of contact on document."""
-    CONTACT_EMAIL: str = "admin"
+    CONTACT_EMAIL: str = "later@later.nl"
     """Email for contact on document."""
-    TITLE: str | None = "Litestar Fullstack"
+    TITLE: str | None = "Phantom NMS"
     """Document title."""
     VERSION: str = f"v{version}"
     """Document version."""
@@ -333,6 +333,24 @@ class RedisSettings(BaseSettings):
     """Length of time to wait (in seconds) between keepalive commands."""
 
 
+class EmailSettings(BaseSettings):
+    """Email settings for the litestar-fastmail package"""
+
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", env_prefix="WORKER_", case_sensitive=False
+    )
+
+    MAIL_USERNAME: str = ""
+    MAIL_PASSWORD: str = ""
+    MAIL_PORT: int = 1025
+    MAIL_SERVER: str = "localmail"
+    MAIL_STARTTLS: bool = False
+    MAIL_SSL_TLS: bool = False
+    MAIL_FROM: EmailStr = "test@email.com"
+    TEMPLATE_FOLDER: DirectoryPath | None = None
+    SUPPRESS_SEND: conint(gt=-1, lt=2) = 0  # type: ignore
+
+
 @lru_cache
 def load_settings() -> (
     tuple[
@@ -343,6 +361,7 @@ def load_settings() -> (
         ServerSettings,
         LogSettings,
         WorkerSettings,
+        EmailSettings,
     ]
 ):
     """Load Settings file.
@@ -390,18 +409,13 @@ def load_settings() -> (
         log: LogSettings = LogSettings()
         worker: WorkerSettings = WorkerSettings()
 
+        EmailSettings.model_rebuild()
+        email: EmailSettings = EmailSettings()
+
     except ValidationError as e:
         print("Could not load settings. %s", e)  # noqa: T201
         raise e from e
-    return (
-        app,
-        redis,
-        db,
-        openapi,
-        server,
-        log,
-        worker,
-    )
+    return (app, redis, db, openapi, server, log, worker, email)
 
 
 (
@@ -412,4 +426,5 @@ def load_settings() -> (
     server,
     log,
     worker,
+    email,
 ) = load_settings()
