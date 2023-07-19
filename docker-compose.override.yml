@@ -54,3 +54,19 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+  docs:
+    command: mkdocs serve
+    image: app:latest-dev
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.example
+    volumes:
+      - ./mkdocs.yml:/workspace/app/mkdocs.yml
+      - ./docs:/workspace/app/docs

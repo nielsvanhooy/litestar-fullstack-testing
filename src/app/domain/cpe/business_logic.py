@@ -28,8 +28,13 @@ async def communicate_with_cpe(ctx, *, ip, os):
 
 
 async def readout_cpe(ip: str, os: str):
-    #     await worker.queues["background-tasks"].enqueue(
-    # "communicate_with_cpe",
+    await worker.queues["background-tasks"].enqueue(
+        "communicate_with_cpe",
+        ip=ip,
+        os=os,
+        timeout=60,
+    )
+
     await worker.queues["background-tasks"].enqueue(
         "send_email", subject="test", to=["test@test.nl", "sjaakie@sjaakie.nl"], html="", timeout=60
     )
