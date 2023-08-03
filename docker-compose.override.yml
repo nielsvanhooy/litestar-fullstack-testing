@@ -19,6 +19,9 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
+    networks:
+      - test_network
+
   app:
     build:
       context: .
@@ -29,7 +32,10 @@ services:
     image: app:latest-dev
     command: litestar run --reload
     restart: always
+    networks:
+      - test_network
     <<: *development-volumes
+
   worker:
     image: app:latest-dev
     command: litestar worker run
@@ -42,6 +48,9 @@ services:
         condition: service_healthy
     env_file:
       - .env.example
+    networks:
+      - test_network
+
   migrator:
     image: app:latest-dev
     command: litestar database upgrade-database
@@ -54,6 +63,9 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    networks:
+      - test_network
+
   docs:
     command: mkdocs serve
     image: app:latest-dev
@@ -70,3 +82,5 @@ services:
     volumes:
       - ./mkdocs.yml:/workspace/app/mkdocs.yml
       - ./docs:/workspace/app/docs
+    networks:
+      - test_network

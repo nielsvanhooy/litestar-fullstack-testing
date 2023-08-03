@@ -14,14 +14,14 @@ from saq.types import QueueInfo
 from app.domain.accounts.dtos import AccountLogin, AccountRegister, UserCreate, UserUpdate
 from app.domain.accounts.models import User
 from app.domain.analytics.dtos import NewUsersByWeek
-from app.domain.cpe.models import CPE
+from app.domain.cpe.models import CPE, CPEBusinessProduct, CPEVendor
 from app.domain.tags.models import Tag
 from app.domain.teams.models import Team
 from app.lib import email, settings, worker
 from app.lib.service.generic import Service
 from app.lib.worker.controllers import WorkerController
 
-from . import accounts, analytics, cpe, openapi, plugins, security, system, tags, teams, urls, web
+from . import accounts, analytics, cpe, openapi, plugins, security, system, tags, teams, tscm, urls, web
 from .domain_tasks import (
     domain_background_tasks,
     domain_cron_background_tasks,
@@ -60,6 +60,7 @@ __all__ = [
     "teams",
     "web",
     "cpe",
+    "tscm",
     "urls",
     "tags",
     "security",
@@ -120,4 +121,6 @@ signature_namespace: Mapping[str, Any] = {
     "TypeEncodersMap": TypeEncodersMap,
     "CPE": CPE,
     "CpeService": cpe.services.CpeService,
+    "CPEVendor": CPEVendor,
+    "CPEBusinessProduct": CPEBusinessProduct,
 }

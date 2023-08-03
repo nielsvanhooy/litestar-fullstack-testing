@@ -23,6 +23,9 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+    networks:
+      - test_network
+
   db:
     image: postgres:latest
     ports:
@@ -48,6 +51,10 @@ services:
       interval: 2s
       timeout: 3s
       retries: 40
+    networks:
+      test_network:
+        ipv4_address: 172.23.0.200
+
   app:
     build:
       context: .
@@ -63,6 +70,9 @@ services:
       - "8000:8000"
     env_file:
       - .env.example
+    networks:
+      - test_network
+
   worker:
     image: app:latest
     command: litestar worker run
@@ -74,6 +84,9 @@ services:
         condition: service_healthy
     env_file:
       - .env.example
+    networks:
+      - test_network
+
   migrator:
     image: app:latest
     restart: "no"
@@ -85,6 +98,16 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.23.0.0/24
+
 volumes:
   db-data: {}
   cache-data: {}
