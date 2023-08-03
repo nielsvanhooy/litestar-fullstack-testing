@@ -5,8 +5,11 @@ from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+from app.domain import User
 from app.lib import log, settings
-from app.lib.db.orm import DatabaseModel
+
+# weirdly this doenst work anymore. i had to add User and to target_metadata to User
+# so that alembic can autogenerate.
 
 __all__ = ["do_run_migrations", "run_migrations_offline", "run_migrations_online"]
 
@@ -24,7 +27,9 @@ config = context.config
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-target_metadata = DatabaseModel.metadata
+target_metadata = [
+    User.metadata,
+]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
