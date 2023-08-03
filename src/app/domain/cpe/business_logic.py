@@ -1,4 +1,4 @@
-from phantom_communicator.communicator_asyncio import Communicator
+from phantom_communicator.communicators.base import Communicator
 
 from app.lib import worker
 

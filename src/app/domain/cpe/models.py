@@ -1,6 +1,7 @@
 from litestar.contrib.sqlalchemy.base import AuditColumns, CommonTableAttributes, orm_registry
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column, orm_insert_sentinel
+from app.lib.db.orm import TimestampedDatabaseModel
 
 __all__ = ["CPE"]
 
@@ -26,3 +27,12 @@ class CPE(CPEBase):
     os: Mapped[str]
     mgmt_ip: Mapped[str]
     sec_mgmt_ip: Mapped[str | None]
+
+
+class CPEVendor(TimestampedDatabaseModel):
+    name: Mapped[str]
+
+
+class CPEService(TimestampedDatabaseModel):
+    key: Mapped[str]
+    name: Mapped[str]
