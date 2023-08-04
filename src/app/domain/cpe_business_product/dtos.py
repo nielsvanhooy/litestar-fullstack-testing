@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from litestar.contrib.sqlalchemy.dto import SQLAlchemyDTO
-from litestar.dto.factory.stdlib.dataclass import DataclassDTO
+from litestar.dto import DataclassDTO
 
 from app.domain.cpe_business_product.models import CPEBusinessProduct
 from app.lib import dto

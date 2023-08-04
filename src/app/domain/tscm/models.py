@@ -8,7 +8,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.lib.db import orm
 
 if TYPE_CHECKING:
-    from app.domain.cpe.models import CPEBusinessProduct, CPEVendor
+    from app.domain.cpe_business_product.models import CPEBusinessProduct
+    from app.domain.cpe_vendor.models import CPEVendor
+
 
 __all__ = ["TSCMCheck"]
 

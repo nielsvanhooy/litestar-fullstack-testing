@@ -11,6 +11,6 @@ __all__ = ["CPEVendor"]
 
 
 class CPEVendor(orm.TimestampedDatabaseModel):
-    __tablename__ = "vendor"
+    __tablename__ = "vendor"  # type: ignore[assignment]
 
     name: Mapped[str]

@@ -18,7 +18,7 @@ __all__ = ["CpeVendorController"]
 
 if TYPE_CHECKING:
     from litestar.contrib.repository.filters import FilterTypes
-    from litestar.dto.factory import DTOData
+    from litestar.dto import DTOData
     from litestar.pagination import OffsetPagination
 
     from app.domain.cpe_vendor.models import CPEVendor

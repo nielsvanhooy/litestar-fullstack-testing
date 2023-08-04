@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepository, SQLAlchemyAsyncRepositoryService
+from app.lib.repository import SQLAlchemyAsyncRepository
+from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
 
 from .models import CPEVendor
 
