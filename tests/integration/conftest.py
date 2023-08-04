@@ -104,7 +104,7 @@ async def _seed_db(
     """
 
     from app.domain.accounts.services import UserService
-    from app.domain.cpe.services import CpeService
+    from app.domain.cpe.services import CPEService
     from app.domain.teams.services import TeamService
     from app.lib.db import orm  # pylint: disable=[import-outside-toplevel,unused-import]
 
@@ -119,7 +119,7 @@ async def _seed_db(
         for raw_team in raw_teams:
             await teams_services.create(raw_team)
         await teams_services.repository.session.commit()
-    async with CpeService.new(sessionmaker()) as cpes_services:
+    async with CPEService.new(sessionmaker()) as cpes_services:
         for raw_cpe in raw_cpes:
             await cpes_services.create(raw_cpe)
         await cpes_services.repository.session.commit()

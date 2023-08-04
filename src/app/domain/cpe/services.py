@@ -6,7 +6,7 @@ from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepository, SQLAlchemyAsyn
 
 from .models import CPE
 
-__all__ = ["CpeService", "CpeRepository"]
+__all__ = ["CPEService", "CpeRepository"]
 
 
 class CpeRepository(SQLAlchemyAsyncRepository[CPE]):
@@ -16,7 +16,7 @@ class CpeRepository(SQLAlchemyAsyncRepository[CPE]):
     id_attribute = "device_id"
 
 
-class CpeService(SQLAlchemyAsyncRepositoryService[CPE]):
+class CPEService(SQLAlchemyAsyncRepositoryService[CPE]):
     repository_type = CpeRepository
 
     def __init__(self, **repo_kwargs: Any) -> None:

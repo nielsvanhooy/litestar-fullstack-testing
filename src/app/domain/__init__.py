@@ -15,8 +15,8 @@ from app.domain.accounts.dtos import AccountLogin, AccountRegister, UserCreate, 
 from app.domain.accounts.models import User
 from app.domain.analytics.dtos import NewUsersByWeek
 from app.domain.cpe.models import CPE
-from app.domain.cpe_business_product import CPEBusinessProduct
-from app.domain.cpe_vendor import CPEVendor
+from app.domain.cpe_business_product.models import CPEBusinessProduct
+from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.tags.models import Tag
 from app.domain.teams.models import Team
 from app.lib import email, settings, worker
@@ -64,6 +64,8 @@ routes: list[ControllerRouterHandler] = [
     system.controllers.SystemController,
     web.controllers.WebController,
     cpe.controllers.CpeController,
+    cpe_business_product.controllers.CpeBusinessProductController,
+    cpe_vendor.controllers.CpeVendorController,
 ]
 
 if settings.worker.WEB_ENABLED:
@@ -139,7 +141,9 @@ signature_namespace: Mapping[str, Any] = {
     "DTOData": DTOData,
     "TypeEncodersMap": TypeEncodersMap,
     "CPE": CPE,
-    "CpeService": cpe.services.CpeService,
+    "CPEService": cpe.services.CPEService,
     "CPEVendor": CPEVendor,
+    "CPEVendorService": cpe_vendor.services.CPEVendorService,
     "CPEBusinessProduct": CPEBusinessProduct,
+    "CPEBusinessProductService": cpe_business_product.services.CPEBusinessProductService,
 }

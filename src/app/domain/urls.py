@@ -37,3 +37,21 @@ CPES_CREATE = "/api/cpes"
 CPES_DELETE = "/api/cpes/{device_id:str}"
 CPES_READOUT = "/api/cpes/{device_id:str}/readout"
 CPES_UPDATE = "/api/cpes/{device_id:str}"
+
+
+########## CPE Business Product
+
+CPE_BUSINESS_LIST = "/api/cpe-business-products"
+CPE_BUSINESS_DETAIL = "/api/cpe-business-products/{product_id:str}"
+CPE_BUSINESS_CREATE = "/api/cpe-business-products"
+CPE_BUSINESS_DELETE = "/api/cpe-business-products/{product_id:str}"
+CPE_BUSINESS_UPDATE = "/api/cpe-business-products/{product_id:str}"
+
+
+########## CPE Business Product
+
+CPE_VENDORS_LIST = "/api/cpe-vendors"
+CPE_VENDORS_DETAIL = "/api/cpe-vendors/{vendor_id:str}"
+CPE_VENDORS_CREATE = "/api/cpe-vendors"
+CPE_VENDORS_DELETE = "/api/cpe-vendors/{vendor_id:str}"
+CPE_VENDORS_UPDATE = "/api/cpe-vendors/{vendor_id:str}"

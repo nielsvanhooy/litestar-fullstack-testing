@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from litestar.pagination import OffsetPagination
 
     from app.domain.cpe.models import CPE
-    from app.domain.cpe.services import CpeService
+    from app.domain.cpe.services import CPEService
 
 logger = log.get_logger()
 
@@ -42,7 +42,7 @@ class CpeController(Controller):
         path=urls.CPES_LIST,
     )
     async def list_cpes(
-        self, cpes_service: CpeService, filters: list[FilterTypes] = Dependency(skip_validation=True)
+        self, cpes_service: CPEService, filters: list[FilterTypes] = Dependency(skip_validation=True)
     ) -> OffsetPagination[CPE]:
         """List users."""
         results, total = await cpes_service.list_and_count(*filters)
@@ -56,7 +56,7 @@ class CpeController(Controller):
     )
     async def get_cpe(
         self,
-        cpes_service: CpeService,
+        cpes_service: CPEService,
         device_id: str = Parameter(title="device id", description="The device to retrieve"),
     ) -> CPE:
         """Get a CPE"""
@@ -74,7 +74,7 @@ class CpeController(Controller):
     )
     async def create_cpe(
         self,
-        cpes_service: CpeService,
+        cpes_service: CPEService,
         data: DTOData[CreateCPE],
     ) -> CPE:
         """Create a new user."""
@@ -92,7 +92,7 @@ class CpeController(Controller):
     async def update_cpe(
         self,
         data: DTOData[UpdateCPE],
-        cpes_service: CpeService,
+        cpes_service: CPEService,
         device_id: str = Parameter(title="device id", description="The device to update"),
     ) -> CPE:
         """Update a CPE"""
@@ -111,7 +111,7 @@ class CpeController(Controller):
     )
     async def delete_cpe(
         self,
-        cpes_service: CpeService,
+        cpes_service: CPEService,
         device_id: str = Parameter(
             title="CPE ID",
             description="The CPE to delete.",
@@ -131,7 +131,7 @@ class CpeController(Controller):
     )
     async def readout_cpe(
         self,
-        cpes_service: CpeService,
+        cpes_service: CPEService,
         device_id: str = Parameter(
             title="CPE ID",
             description="The CPE to perform a readout on.",
