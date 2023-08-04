@@ -270,3 +270,47 @@ convention = "google"
 
 [tool.codespell]
 ignore-words-list = "alog"
+
+[tool.mypy]
+disallow_any_generics = false
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+exclude = '''(?x)(
+^build/
+|^dist/
+|^.venv/
+|^node_modules/
+|^migrations/
+)
+'''
+implicit_reexport = false
+plugins = ['pydantic.mypy']
+show_error_codes = true
+strict = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+
+[[tool.mypy.overrides]]
+disallow_untyped_decorators = false
+module = ["tests.*"]
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = ["sqlalchemy.*", "saq.*", "uvicorn.*", "aiohttp.*", "jsbeautifier", "jsbeautifier.*"]
+
+[[tool.mypy.overrides]]
+ignore_errors = true
+module = ["app.lib.db.migrations.*", "app.lib.dto.*"]
+
+[tool.pyright]
+include = ["src/app", "tests"]
