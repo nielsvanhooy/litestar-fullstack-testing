@@ -4,9 +4,7 @@ from litestar.contrib.sqlalchemy.base import AuditColumns, CommonTableAttributes
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column, orm_insert_sentinel
 
-from app.lib.db import orm
-
-__all__ = ["CPE", "CPEBusinessProduct", "CPEVendor"]
+__all__ = ["CPE"]
 
 
 class CPEPrimaryKey:
@@ -30,16 +28,3 @@ class CPE(CPEBase):
     os: Mapped[str]
     mgmt_ip: Mapped[str]
     sec_mgmt_ip: Mapped[str | None]
-
-
-class CPEVendor(orm.TimestampedDatabaseModel):
-    __tablename__ = "vendor"
-
-    name: Mapped[str]
-
-
-class CPEBusinessProduct(orm.TimestampedDatabaseModel):
-    __tablename__ = "business_product"
-
-    key: Mapped[str]
-    name: Mapped[str]
