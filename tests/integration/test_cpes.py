@@ -31,7 +31,7 @@ async def test_cpes_create(client: "AsyncClient", superuser_token_headers: dict[
     assert response.status_code == 201
 
 
-async def test_user_update(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
+async def test_cpes_update(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
     response = await client.patch(
         "/api/cpes/TESM1233",
         json={
@@ -44,7 +44,7 @@ async def test_user_update(client: "AsyncClient", superuser_token_headers: dict[
     assert response.json()["os"] == "hvrp"
 
 
-async def test_accounts_delete(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
+async def test_cpes_delete(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
     response = await client.delete(
         "/api/cpes/TESM1234",
         headers=superuser_token_headers,

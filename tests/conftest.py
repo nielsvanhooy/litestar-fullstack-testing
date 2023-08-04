@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
     from app.domain.accounts.models import User
     from app.domain.cpe.models import CPE
+    from app.domain.cpe_business_product.models import CPEBusinessProduct
     from app.domain.teams.models import Team
 
 
@@ -95,6 +96,22 @@ def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
             "os": "iosxe",
             "mgmt_ip": "10.1.1.156",
             "sec_mgmt_ip": None,
+        },
+    ]
+
+
+@pytest.fixture(name="raw_cpe_business_products")
+def fx_raw_cpe_business_products() -> list[CPEBusinessProduct | dict[str, Any]]:
+    """Unstructured cpe business product representations."""
+
+    return [
+        {
+            "name": "VPN",
+            "key": "VPN Network",
+        },
+        {
+            "name": "NON VPN",
+            "key": "Non VPN Network",
         },
     ]
 
