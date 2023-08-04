@@ -9,7 +9,7 @@ mail_system = FastMail(ConnectionConfig(**settings.email.model_dump()))
 __all__ = ["send_email"]
 
 
-async def send_email(ctx, *, subject: str, to: list, html: str, attachments: list | None = None) -> bool:
+async def send_email(ctx: str, *, subject: str, to: list, html: str, attachments: list | None = None) -> bool:
     """Args:
         ctx: an argument of SAQ worker
         subject: str = a subject for the email

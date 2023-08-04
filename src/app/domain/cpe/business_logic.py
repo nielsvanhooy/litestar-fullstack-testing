@@ -5,7 +5,7 @@ from app.lib import worker
 __all__ = ["communicate_with_cpe", "readout_cpe"]
 
 
-async def communicate_with_cpe(ctx, *, ip, os):
+async def communicate_with_cpe(ctx, *, ip, os):  # type: ignore
     communicator = Communicator.factory(host=ip, os=os)
     async with communicator as conn:
         await conn.send_commands(
@@ -27,7 +27,7 @@ async def communicate_with_cpe(ctx, *, ip, os):
         )
 
 
-async def readout_cpe(ip: str, os: str):
+async def readout_cpe(ip: str, os: str):  # type: ignore
     await worker.queues["background-tasks"].enqueue(
         "communicate_with_cpe",
         ip=ip,
