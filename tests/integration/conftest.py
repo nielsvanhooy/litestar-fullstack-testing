@@ -15,6 +15,7 @@ from sqlalchemy.pool import NullPool
 from app.domain.accounts.models import User
 from app.domain.cpe.models import CPE
 from app.domain.cpe_business_product.models import CPEBusinessProduct
+from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.security import auth
 from app.domain.teams.models import Team
 from app.lib import db, worker
@@ -93,6 +94,7 @@ async def _seed_db(
     raw_teams: list[Team | dict[str, Any]],
     raw_cpes: list[CPE | dict[str, Any]],
     raw_cpe_business_products: list[CPEBusinessProduct | dict[str, Any]],
+    raw_cpe_vendors: list[CPEVendor | dict[str, Any]],
 ) -> AsyncIterator[None]:
     """Populate test database with.
 
@@ -103,12 +105,13 @@ async def _seed_db(
         raw_teams: Test teams to add to the database
         raw_cpes: Test CPES to add to the database
         raw_cpe_business_products: Test business products to add to the database
-
+        raw_cpe_vendors: Test vendors to add to the database
     """
 
     from app.domain.accounts.services import UserService
     from app.domain.cpe.services import CPEService
     from app.domain.cpe_business_product.services import CPEBusinessProductService
+    from app.domain.cpe_vendor.services import CPEVendorService
     from app.domain.teams.services import TeamService
     from app.lib.db import orm  # pylint: disable=[import-outside-toplevel,unused-import]
 
@@ -127,10 +130,14 @@ async def _seed_db(
         for raw_cpe in raw_cpes:
             await cpes_services.create(raw_cpe)
         await cpes_services.repository.session.commit()
-    async with CPEBusinessProductService.new(sessionmaker()) as cpes_services:
+    async with CPEBusinessProductService.new(sessionmaker()) as cpes_business_services:
         for raw_cpe_business_product in raw_cpe_business_products:
-            await cpes_services.create(raw_cpe_business_product)
-        await cpes_services.repository.session.commit()
+            await cpes_business_services.create(raw_cpe_business_product)
+        await cpes_business_services.repository.session.commit()
+    async with CPEVendorService.new(sessionmaker()) as vendor_services:
+        for raw_cpe_vendor in raw_cpe_vendors:
+            await vendor_services.create(raw_cpe_vendor)
+        await vendor_services.repository.session.commit()
 
     yield
 
