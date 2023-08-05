@@ -53,3 +53,16 @@ async def test_cpe_business_products_delete(client: "AsyncClient", superuser_tok
         headers=superuser_token_headers,
     )
     assert response.status_code == 204
+
+
+async def test_cpe_business_products_uniqueness(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
+    response = await client.post(
+        "/api/cpe-business-products",
+        json={
+            "name": "VPN",
+            "key": "VPN Network",
+        },
+        headers=superuser_token_headers,
+    )
+    # todo find out how to work with duplicate db objects
+    assert response.status_code == 500
