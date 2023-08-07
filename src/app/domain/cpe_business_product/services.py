@@ -14,7 +14,6 @@ class CPEBusinessProductRepository(SQLAlchemyAsyncRepository[CPEBusinessProduct]
     """CPE Sqlalchemy Repository"""
 
     model_type = CPEBusinessProduct
-    id_attribute = "name"
 
 
 class CPEBusinessProductService(SQLAlchemyAsyncRepositoryService[CPEBusinessProduct]):

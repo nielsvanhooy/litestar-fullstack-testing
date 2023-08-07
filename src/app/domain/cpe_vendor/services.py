@@ -14,7 +14,6 @@ class CPEVendorRepository(SQLAlchemyAsyncRepository[CPEVendor]):
     """CPE Sqlalchemy Repository"""
 
     model_type = CPEVendor
-    id_attribute = "name"
 
 
 class CPEVendorService(SQLAlchemyAsyncRepositoryService[CPEVendor]):

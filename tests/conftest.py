@@ -107,10 +107,12 @@ def fx_raw_cpe_business_products() -> list[CPEBusinessProduct | dict[str, Any]]:
 
     return [
         {
+            "id": "daa81279-1f85-41ba-a49a-a9430d99cc5e",
             "name": "VPN",
             "key": "VPN Network",
         },
         {
+            "id": "daa81279-1f85-41ba-a49a-a9430d99cc5f",
             "name": "NON VPN",
             "key": "Non VPN Network",
         },
@@ -123,9 +125,11 @@ def fx_raw_cpe_vendors() -> list[CPEVendor | dict[str, Any]]:
 
     return [
         {
+            "id": "daa81279-1f85-41ba-a49a-a9430d99cc5c",
             "name": "cisco",
         },
         {
+            "id": "daa81279-1f85-41ba-a49a-a9430d99cc5d",
             "name": "huawei",
         },
     ]

@@ -19,6 +19,7 @@ from app.domain.cpe_business_product.models import CPEBusinessProduct
 from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.tags.models import Tag
 from app.domain.teams.models import Team
+from app.domain.tscm.models import TSCMCheck
 from app.lib import email, settings, worker
 from app.lib.service.generic import Service
 from app.lib.worker.controllers import WorkerController
@@ -66,6 +67,7 @@ routes: list[ControllerRouterHandler] = [
     cpe.controllers.CpeController,
     cpe_business_product.controllers.CpeBusinessProductController,
     cpe_vendor.controllers.CpeVendorController,
+    tscm.controllers.TscmController,
 ]
 
 if settings.worker.WEB_ENABLED:
@@ -146,4 +148,6 @@ signature_namespace: Mapping[str, Any] = {
     "CPEVendorService": cpe_vendor.services.CPEVendorService,
     "CPEBusinessProduct": CPEBusinessProduct,
     "CPEBusinessProductService": cpe_business_product.services.CPEBusinessProductService,
+    "TSCMCheck": TSCMCheck,
+    "TscmService": tscm.services.TscmService,
 }

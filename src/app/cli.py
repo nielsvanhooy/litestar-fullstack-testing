@@ -1,6 +1,8 @@
+import json
 import multiprocessing
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 import anyio
@@ -15,6 +17,7 @@ from rich.prompt import Confirm
 from app.domain import plugins
 from app.domain.accounts.dtos import UserCreate, UserUpdate
 from app.domain.accounts.services import UserService
+from app.domain.tscm.services import TscmService
 from app.lib import db, log, settings, worker
 
 __all__ = [
@@ -358,6 +361,32 @@ def purge_database(no_prompt: bool) -> None:
 def show_database_revision() -> None:
     """Show current database revision."""
     db.utils.show_database_revision()
+
+
+@database_management_app.command(
+    name="load-fixtures",
+    help="load fixtures defined trough path parameter (from the project dir)",
+)
+@click.option(
+    "--path",
+    help="path of the fixture",
+    type=click.STRING,
+    required=True,
+    show_default=False,
+)
+def load_fixtues(path) -> None:
+    async def _load_fixtures(path):
+        file_path = Path.cwd() / path
+        print(file_path)
+        f = open(file_path)
+
+        data = json.load(f)
+        async with TscmService.new() as tscm_service:
+            lala = await tscm_service.create(data=data)
+            print(lala)
+            await tscm_service.repository.session.commit()
+
+    anyio.run(_load_fixtures, path)
 
 
 def _convert_uvicorn_args(args: dict[str, Any]) -> list[str]:

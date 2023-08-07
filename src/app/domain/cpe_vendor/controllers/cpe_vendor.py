@@ -60,10 +60,10 @@ class CpeVendorController(Controller):
     async def get_cpe_vendor(
         self,
         cpes_vendor_service: CPEVendorService,
-        product_id: str = Parameter(title="product id", description="The business product to retrieve"),
+        vendor_id: str = Parameter(title="vendor_id", description="The cpe vendor to retrieve"),
     ) -> CPEVendor:
         """Get a business product"""
-        db_obj = await cpes_vendor_service.get(product_id)
+        db_obj = await cpes_vendor_service.get(vendor_id)
         return cpes_vendor_service.to_dto(db_obj)
 
     @post(
@@ -96,11 +96,11 @@ class CpeVendorController(Controller):
         self,
         data: DTOData[CreateUpdateCPEVendor],
         cpes_vendor_service: CPEVendorService,
-        product_id: str = Parameter(title="product id", description="The business product to update"),
+        vendor_id: str = Parameter(title="vendor id", description="The cpe vendor to update"),
     ) -> CPEVendor:
-        """Update a business product"""
+        """Update a cpe vendor"""
         obj = data.create_instance()
-        db_obj = await cpes_vendor_service.update(product_id, obj.__dict__)
+        db_obj = await cpes_vendor_service.update(vendor_id, obj.__dict__)
         return cpes_vendor_service.to_dto(db_obj)
 
     @delete(
@@ -115,10 +115,10 @@ class CpeVendorController(Controller):
     async def delete_cpe_vendor(
         self,
         cpes_vendor_service: CPEVendorService,
-        product_id: str = Parameter(
-            title="CPE Business Product ID",
-            description="The CPE business product id to delete.",
+        vendor_id: str = Parameter(
+            title="CPE Vendor ID",
+            description="The CPE vendor to delete.",
         ),
     ) -> None:
         """Delete a cpe from the system."""
-        _ = await cpes_vendor_service.delete(product_id)
+        _ = await cpes_vendor_service.delete(vendor_id)

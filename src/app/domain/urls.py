@@ -55,3 +55,12 @@ CPE_VENDORS_DETAIL = "/api/cpe-vendors/{vendor_id:str}"
 CPE_VENDORS_CREATE = "/api/cpe-vendors"
 CPE_VENDORS_DELETE = "/api/cpe-vendors/{vendor_id:str}"
 CPE_VENDORS_UPDATE = "/api/cpe-vendors/{vendor_id:str}"
+
+
+########## TSCM Checks
+
+TSCM_LIST = "/api/tscm"
+TSCM_DETAIL = "/api/tscm/{tscm_check_id:str}"
+TSCM_LIST_CREATE = "/api/tscm"
+TSCM_LIST_DELETE = "/api/tscm/{tscm_check_id:str}"
+TSCM_LIST_UPDATE = "/api/tscm/{tscm_check_id:str}"

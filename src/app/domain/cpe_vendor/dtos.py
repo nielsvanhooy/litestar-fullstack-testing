@@ -15,16 +15,13 @@ __all__ = [
 
 class CpeVendorDTO(SQLAlchemyDTO[CPEVendor]):
     config = dto.config(
-        exclude={
-            "id",
-        },
         max_nested_depth=1,
     )
 
 
 @dataclass
 class CreateUpdateCPEVendor:
-    name: str
+    name: str | None = None
 
 
 class CreateUpdateCPEVendorDTO(DataclassDTO[CreateUpdateCPEVendor]):

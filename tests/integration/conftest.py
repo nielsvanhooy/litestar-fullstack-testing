@@ -119,21 +119,26 @@ async def _seed_db(
     async with engine.begin() as conn:
         await conn.run_sync(metadata.drop_all)
         await conn.run_sync(metadata.create_all)
+
     async with UserService.new(sessionmaker()) as users_service:
         await users_service.create_many(raw_users)
         await users_service.repository.session.commit()
+
     async with TeamService.new(sessionmaker()) as teams_services:
         for raw_team in raw_teams:
             await teams_services.create(raw_team)
         await teams_services.repository.session.commit()
+
     async with CPEService.new(sessionmaker()) as cpes_services:
         for raw_cpe in raw_cpes:
             await cpes_services.create(raw_cpe)
         await cpes_services.repository.session.commit()
+
     async with CPEBusinessProductService.new(sessionmaker()) as cpes_business_services:
         for raw_cpe_business_product in raw_cpe_business_products:
             await cpes_business_services.create(raw_cpe_business_product)
         await cpes_business_services.repository.session.commit()
+
     async with CPEVendorService.new(sessionmaker()) as vendor_services:
         for raw_cpe_vendor in raw_cpe_vendors:
             await vendor_services.create(raw_cpe_vendor)

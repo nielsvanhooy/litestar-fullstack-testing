@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     from litestar.types import Scope
 
 __all__ = (
+    "ConflictError",
     "AuthorizationError",
     "HealthCheckConfigurationError",
     "MissingDependencyError",

@@ -15,9 +15,6 @@ __all__ = [
 
 class CpeBusinessDTO(SQLAlchemyDTO[CPEBusinessProduct]):
     config = dto.config(
-        exclude={
-            "id",
-        },
         max_nested_depth=1,
     )
 
