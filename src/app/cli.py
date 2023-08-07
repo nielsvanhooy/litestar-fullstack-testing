@@ -388,7 +388,6 @@ def load_fixtues(path) -> None:
 
     anyio.run(_load_fixtures, path)
 
-
 def _convert_uvicorn_args(args: dict[str, Any]) -> list[str]:
     process_args = []
     for arg, value in args.items():

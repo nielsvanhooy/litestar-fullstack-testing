@@ -29,10 +29,10 @@ class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
     async def create(self, data: TSCMCheck | dict[str, Any]) -> TSCMCheck:
         """Create a new TSCM check with relation service and vendor"""
         business_service = await anext(provides_cpe_business_service(db_session=self.repository.session))
-        business_product = await business_service.get(data["service"])
+        business_product = await business_service.get(data["business_service"], id_attribute="name")
 
         vendor_service = await anext(provides_cpe_vendor_service(db_session=self.repository.session))
-        vendor_product = await vendor_service.get(data["vendor"])
+        vendor_product = await vendor_service.get(data["vendor"], id_attribute="name")
 
         db_obj = await self.to_model(data, "create")
         db_obj.vendor = vendor_product

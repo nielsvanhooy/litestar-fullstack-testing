@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from app.domain.cpe.models import CPE
     from app.domain.cpe_business_product.models import CPEBusinessProduct
     from app.domain.cpe_vendor.models import CPEVendor
+    from app.domain.tscm.models import TSCMCheck
     from app.domain.teams.models import Team
 
 
@@ -131,6 +132,39 @@ def fx_raw_cpe_vendors() -> list[CPEVendor | dict[str, Any]]:
         {
             "id": "daa81279-1f85-41ba-a49a-a9430d99cc5d",
             "name": "huawei",
+        },
+    ]
+
+@pytest.fixture(name="raw_tscm_checks")
+def fx_raw_tscm_checks() -> list[TSCMCheck | dict[str, Any]]:
+    """Unstructured tscm check representations."""
+
+    return [
+        {
+            "id":"f240e0f9-41d6-4a08-975a-bec270cb8600",
+            "key":"ACL10",
+            "regex":"None",
+            "python_code":"validated=True\r\nfirst_check = False\r\nsecond_check = False\r\n\r\nfirst_check_regexes=[\r\n    \"ip access-list standard 10\\n\"\\\r\n    \" 10 permit[\\s]+193\\.172\\.69\\.64 0\\.0\\.0\\.31\\n\"\\\r\n    \" 20 permit[\\s]+193\\.172\\.69\\.96 0\\.0\\.0\\.31\\n\"\\\r\n    \" 30 deny[\\s]+any\",\r\n]\r\nfor regex in first_check_regexes:\r\n    # added config it not None and  to the check because for PLTM4764\r\n    if re.search(regex,config):\r\n        first_check = True\r\n\r\nsecond_check_regexes=[\r\n    \"access-list 10 permit[\\s]+193\\.172\\.69\\.64 0\\.0\\.0\\.31\\n\"\\\r\n    \"access-list 10 permit[\\s]+193\\.172\\.69\\.96 0\\.0\\.0\\.31\\n\"\\\r\n    \"access-list 10 deny[\\s]+any\",\r\n]\r\nfor regex in second_check_regexes:\r\n    if re.search(regex,config):\r\n        second_check = True\r\n\r\nif not first_check and not second_check:\r\n    validated = False\r\n    print (\"ACL 10 niet aangetroffen of niet juist\")",
+            "remediation_commands":"None",
+            "vendor": "cisco",
+            "business_service": "VPN",
+            "device_model":"All",
+            "replaces_parent_check":"None",
+            "has_child_check":False,
+            "active":True
+        },
+        {
+            "id":"5cf14ce8-76ec-4271-b587-cb6fb63f8ebd",
+            "key":"TACACS_settings",
+            "regex": "None",
+            "python_code":"regexes=[\r\n\"aaa new-model\\n\",\r\n\"aaa authentication login default group tacacs\\+ enable\\n\",\r\n\"aaa authentication enable default group tacacs\\+ enable\\n\",\r\n\"aaa authorization console\\n\",\r\n\"aaa authorization exec default group tacacs\\+ if-authenticated \\n\",\r\n\"aaa authorization commands 15 default group tacacs\\+ none \\n\",\r\n\"(aaa accounting exec default\\n action-type start-stop\\n group tacacs\\+\\n|aaa accounting exec default start-stop group tacacs\\+\\n)\",\r\n\"(aaa accounting commands 1 default\\n action-type start-stop\\n group tacacs\\+\\n|aaa accounting commands 1 default start-stop group tacacs\\+\\n)\",\r\n\"(aaa accounting commands 15 default\\n action-type start-stop\\n group tacacs\\+\\n|aaa accounting commands 15 default start-stop group tacacs\\+\\n)\",\r\n]\r\nvalidated=True\r\nfor regex in regexes:\r\n    if not re.search(regex,config):\r\n        validated=False\r\n        print (\"Niet gevonden:\",regex)",
+            "remediation_commands":"None",
+            "vendor_id":1,
+            "service_id":1,
+            "device_model":"All",
+            "replaces_parent_check":"None",
+            "has_child_check":False,
+            "active":True
         },
     ]
 
