@@ -6,11 +6,7 @@ from litestar.dto import DataclassDTO
 from app.domain.tscm.models import TSCMCheck
 from app.lib import dto
 
-__all__ = [
-    "TscmDTO",
-    "CreateTscmCheck",
-    "CreateTscmCheckDTO"
-]
+__all__ = ["TscmDTO", "CreateTscmCheck", "CreateTscmCheckDTO", "UpdateTscmCheck", "UpdateTscmCheckDTO"]
 
 
 class TscmDTO(SQLAlchemyDTO[TSCMCheck]):
@@ -35,5 +31,25 @@ class CreateTscmCheck:
 
 class CreateTscmCheckDTO(DataclassDTO[CreateTscmCheck]):
     """Create CPE."""
+
+    config = dto.config(rename_strategy="lower")
+
+
+@dataclass
+class UpdateTscmCheck:
+    key: str | None
+    regex: str | None
+    python_code: str | None
+    remediation_commands: str | None
+    vendor: str | None
+    business_service: str | None
+    device_model: str | None
+    replaces_parent_check: str | None
+    has_child_check: bool | None
+    active: bool | None
+
+
+class UpdateTscmCheckDTO(DataclassDTO[UpdateTscmCheck]):
+    """Update TSCM Check"""
 
     config = dto.config(rename_strategy="lower")

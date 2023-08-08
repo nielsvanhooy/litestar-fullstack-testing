@@ -18,6 +18,7 @@ from app.domain.cpe_business_product.models import CPEBusinessProduct
 from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.security import auth
 from app.domain.teams.models import Team
+from app.domain.tscm.models import TSCMCheck
 from app.lib import db, worker
 from tests.docker_service import DockerServiceRegistry, postgres_responsive, redis_responsive
 
@@ -95,6 +96,7 @@ async def _seed_db(
     raw_cpes: list[CPE | dict[str, Any]],
     raw_cpe_business_products: list[CPEBusinessProduct | dict[str, Any]],
     raw_cpe_vendors: list[CPEVendor | dict[str, Any]],
+    raw_tscm_checks: list[TSCMCheck | dict[str, Any]],
 ) -> AsyncIterator[None]:
     """Populate test database with.
 
@@ -106,6 +108,7 @@ async def _seed_db(
         raw_cpes: Test CPES to add to the database
         raw_cpe_business_products: Test business products to add to the database
         raw_cpe_vendors: Test vendors to add to the database
+        raw_tscm_checks: test TSCM Checks to add to the database
     """
 
     from app.domain.accounts.services import UserService
@@ -113,6 +116,7 @@ async def _seed_db(
     from app.domain.cpe_business_product.services import CPEBusinessProductService
     from app.domain.cpe_vendor.services import CPEVendorService
     from app.domain.teams.services import TeamService
+    from app.domain.tscm.services import TscmService
     from app.lib.db import orm  # pylint: disable=[import-outside-toplevel,unused-import]
 
     metadata = orm.DatabaseModel.registry.metadata
@@ -143,6 +147,11 @@ async def _seed_db(
         for raw_cpe_vendor in raw_cpe_vendors:
             await vendor_services.create(raw_cpe_vendor)
         await vendor_services.repository.session.commit()
+
+    async with TscmService.new(sessionmaker()) as tscm_services:
+        for raw_tscm_check in raw_tscm_checks:
+            await tscm_services.create(raw_tscm_check)
+        await tscm_services.repository.session.commit()
 
     yield
 

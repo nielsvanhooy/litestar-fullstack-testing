@@ -1,11 +1,8 @@
-from __future__ import annotations
-
 from typing import Any
 
+from app.domain.tscm.models import TSCMCheck
 from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
-
-from .models import TSCMCheck
 
 __all__ = ["TscmService", "TscmRepository"]
 
@@ -28,13 +25,19 @@ class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
 
     async def create(self, data: TSCMCheck | dict[str, Any]) -> TSCMCheck:
         """Create a new TSCM check with relation service and vendor"""
+
+        if isinstance(data, dict):
+            data_business_product_id = data.get("business_service", None)
+            data_vendor_id = data.get("vendor", None)
+
         business_service = await anext(provides_cpe_business_service(db_session=self.repository.session))
-        business_product = await business_service.get(data["business_service"], id_attribute="name")
+        business_product = await business_service.get(data_business_product_id, id_attribute="name")
 
         vendor_service = await anext(provides_cpe_vendor_service(db_session=self.repository.session))
-        vendor_product = await vendor_service.get(data["vendor"], id_attribute="name")
+        vendor_product = await vendor_service.get(data_vendor_id, id_attribute="name")
 
         db_obj = await self.to_model(data, "create")
         db_obj.vendor = vendor_product
         db_obj.service = business_product
+
         return await super().create(db_obj)

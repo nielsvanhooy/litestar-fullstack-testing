@@ -374,19 +374,18 @@ def show_database_revision() -> None:
     required=True,
     show_default=False,
 )
-def load_fixtues(path) -> None:
-    async def _load_fixtures(path):
+def load_fixtues(path: str) -> None:
+    async def _load_fixtures(path: str) -> None:
         file_path = Path.cwd() / path
-        print(file_path)
-        f = open(file_path)
+        with Path.open(file_path) as f:
+            data = json.load(f)
 
-        data = json.load(f)
         async with TscmService.new() as tscm_service:
-            lala = await tscm_service.create(data=data)
-            print(lala)
+            await tscm_service.create(data=data)
             await tscm_service.repository.session.commit()
 
     anyio.run(_load_fixtures, path)
+
 
 def _convert_uvicorn_args(args: dict[str, Any]) -> list[str]:
     process_args = []
