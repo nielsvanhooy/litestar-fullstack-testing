@@ -65,3 +65,7 @@ async def test_tscm_check_delete(client: "AsyncClient", superuser_token_headers:
         headers=superuser_token_headers,
     )
     assert response.status_code == 204
+
+
+async def test_perform_tscm_check(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
+    ...
