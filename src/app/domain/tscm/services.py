@@ -1,5 +1,9 @@
 from typing import Any
 
+from sqlalchemy import and_, select
+
+from app.domain.cpe_business_product.models import CPEBusinessProduct
+from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.tscm.models import TSCMCheck
 from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
@@ -14,6 +18,24 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
     """CPE Sqlalchemy Repository"""
 
     model_type = TSCMCheck
+
+    async def vendor_product_checks(self, vendor_name: str, business_product_name: str) -> list[TSCMCheck]:
+        """Statement for TSCM Checks based on the vendor and business product for a device
+        todo The statement is perhaps still basic as of aug 8 still learning sqlalchemy 2.0
+        """
+        statement = (
+            select(TSCMCheck)
+            .join(TSCMCheck.vendor)
+            .join(TSCMCheck.service)
+            .where(
+                and_(
+                    CPEVendor.name == vendor_name,
+                    CPEBusinessProduct.name == business_product_name,
+                    TSCMCheck.active == True,
+                )
+            )
+        )
+        return await self.list(statement=statement)
 
 
 class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
@@ -41,3 +63,7 @@ class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
         db_obj.service = business_product
 
         return await super().create(db_obj)
+
+    async def vendor_product_checks(self, vendor_name: str, business_product_name: str) -> list[TSCMCheck]:
+        """Gets the TSCM Checks based on the vendor and business product for a device"""
+        return await self.repository.vendor_product_checks(vendor_name, business_product_name)

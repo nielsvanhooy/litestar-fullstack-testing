@@ -198,6 +198,7 @@ ignore = [
   "B010", # flake8-bugbear - do not call setattr with a constant attribute value
   "B008", #  flake8-bugbear - Do not perform function call `Parameter` in argument defaultsRuff(B008)
   "RUF012", # ruff - mutable class attributes should be annotated with `typing.ClassVar`
+  "E712", # Comparison to True should be cond is True, this breaks and_ sqlalchemy statements with booleeans
 ]
 line-length = 120
 select = [

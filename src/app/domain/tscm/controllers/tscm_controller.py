@@ -8,8 +8,16 @@ from litestar.di import Provide
 from litestar.params import Dependency, Parameter
 
 from app.domain import urls
+from app.domain.tscm.business_logic import perform_tscm_check
 from app.domain.tscm.dependencies import provides_tscm_service
-from app.domain.tscm.dtos import CreateTscmCheck, CreateTscmCheckDTO, TscmDTO, UpdateTscmCheck, UpdateTscmCheckDTO
+from app.domain.tscm.dtos import (
+    CreateTscmCheck,
+    CreateTscmCheckDTO,
+    PerformTscmCheckDTO,
+    TscmDTO,
+    UpdateTscmCheck,
+    UpdateTscmCheckDTO,
+)
 from app.lib import log
 
 __all__ = ["TscmController"]
@@ -122,3 +130,24 @@ class TscmController(Controller):
     ) -> None:
         """Delete a tscm check from the system."""
         _ = await tscm_service.delete(tscm_check_id)
+
+    @post(
+        operation_id="PerformTscmCheck",
+        name="tscmchecks:check",
+        summary="Perform a TSCM Check against a device (config)",
+        cache_control=None,
+        description="Perform a TSCM Check",
+        path=urls.TSCM_CHECK_CPE,
+        dto=PerformTscmCheckDTO,
+    )
+    async def perform_tscm_check(
+        self,
+        tscm_service: TscmService,
+        device_id: str = Parameter(
+            title="Device ID",
+            description="The Device ID to perform a TSCM Check on.",
+        ),
+    ) -> OffsetPagination[TSCMCheck]:
+        """Perform a TSCM Check"""
+        result = await perform_tscm_check(device_id)
+        return tscm_service.to_dto(result)
