@@ -62,7 +62,7 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
             return await self.list(statement=base_query.filter(~TSCMCheck.key.in_(parent_names)))
 
         # if no child checks then we get only the ones marked as parent "ALL"
-        return await self.list(statement=base_query.filter(replaces_parent_check="None"))
+        return await self.list(statement=base_query.filter(TSCMCheck.replaces_parent_check == "None"))
 
 
 class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
