@@ -71,3 +71,6 @@ async def test_perform_tscm_check(client: "AsyncClient", superuser_token_headers
     response = await client.post("/api/tscm/LALA1111/check", headers=superuser_token_headers)
     assert response.status_code == 201
     assert int(response.json()["total"]) > 0
+
+
+######## refactor this back to the unit test part but for now its ok

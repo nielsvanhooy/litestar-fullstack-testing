@@ -19,11 +19,29 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
 
     model_type = TSCMCheck
 
-    async def vendor_product_checks(self, vendor_name: str, business_product_name: str) -> list[TSCMCheck]:
+    async def vendor_product_checks(
+        self, vendor_name: str, business_product_name: str, model_name: str = "All"
+    ) -> list[TSCMCheck]:
         """Statement for TSCM Checks based on the vendor and business product for a device
         todo The statement is perhaps still basic as of aug 8 still learning sqlalchemy 2.0
         """
-        statement = (
+        if selected_check := None:
+            await self.list(
+                statement=(
+                    select(TSCMCheck)
+                    .join(TSCMCheck.vendor)
+                    .join(TSCMCheck.service)
+                    .where(
+                        and_(
+                            CPEVendor.name == vendor_name,
+                            CPEBusinessProduct.name == business_product_name,
+                            TSCMCheck.key == selected_check,
+                        )
+                    )
+                )
+            )
+
+        base_query = (
             select(TSCMCheck)
             .join(TSCMCheck.vendor)
             .join(TSCMCheck.service)
@@ -35,7 +53,16 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
                 )
             )
         )
-        return await self.list(statement=statement)
+
+        child_tasks = await self.list(statement=base_query.filter(TSCMCheck.device_model == model_name))
+
+        if child_tasks and model_name != "All":
+            # if there are child_tasks we filter out the parents of the child.
+            parent_names = [task.replaces_parent_check for task in child_tasks]
+            return await self.list(statement=base_query.filter(~TSCMCheck.key.in_(parent_names)))
+
+        # if no child checks then we get only the ones marked as parent "ALL"
+        return await self.list(statement=base_query.filter(replaces_parent_check="None"))
 
 
 class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):

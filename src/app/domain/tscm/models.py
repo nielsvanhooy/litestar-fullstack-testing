@@ -33,3 +33,6 @@ class TSCMCheck(orm.TimestampedDatabaseModel):
     # ------------
     vendor: Mapped[CPEVendor] = relationship(lazy="selectin")
     service: Mapped[CPEBusinessProduct] = relationship(lazy="selectin")
+
+    def __repr__(self):
+        return f"TSCMCheck({self.key})"
