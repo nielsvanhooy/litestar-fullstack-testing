@@ -77,7 +77,7 @@ class CpeController(Controller):
         cpes_service: CPEService,
         data: DTOData[CreateCPE],
     ) -> CPE:
-        """Create a new user."""
+        """Create a new cpe."""
         obj = data.create_instance()
         db_obj = await cpes_service.create(obj.__dict__)
         return cpes_service.to_dto(db_obj)

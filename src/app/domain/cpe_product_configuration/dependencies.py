@@ -20,8 +20,9 @@ if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
 
-async def provides_product_config_service(db_session: AsyncSession) \
-    -> AsyncGenerator[CPEProductConfigurationService, None]:
+async def provides_product_config_service(
+    db_session: AsyncSession,
+) -> AsyncGenerator[CPEProductConfigurationService, None]:
     """Construct repository and service objects for the request."""
     async with CPEProductConfigurationService.new(
         session=db_session, statement=select(CPEProductConfiguration)

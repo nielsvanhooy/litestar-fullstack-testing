@@ -20,10 +20,10 @@ if TYPE_CHECKING:
     from app.domain.accounts.models import User
     from app.domain.cpe.models import CPE
     from app.domain.cpe_business_product.models import CPEBusinessProduct
+    from app.domain.cpe_product_configuration.models import CPEProductConfiguration
     from app.domain.cpe_vendor.models import CPEVendor
     from app.domain.teams.models import Team
     from app.domain.tscm.models import TSCMCheck
-    from app.domain.cpe_product_configuration.models import CPEProductConfiguration
 
 
 @pytest.fixture(scope="session")
@@ -94,6 +94,7 @@ def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
             "sec_mgmt_ip": None,
             "vendor": "cisco",
             "business_service": "VPN",
+            "product_configuration": 999990,
         },
         {
             "device_id": "TESM1234",
@@ -103,6 +104,7 @@ def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
             "sec_mgmt_ip": None,
             "vendor": "cisco",
             "business_service": "VPN",
+            "product_configuration": 999999,
         },
     ]
 
@@ -264,7 +266,7 @@ def fx_raw_product_configurations() -> list[CPEProductConfiguration | dict[str, 
         {
             "id": "76175388-5fb9-42ec-b42d-701e012ce7db",
             "description": "product configuration for a device",
-            "configuration_id": 99999,
+            "configuration_id": 999999,
             "cpe_model": "3600",
             "vendor": "cisco",
         },
@@ -274,7 +276,7 @@ def fx_raw_product_configurations() -> list[CPEProductConfiguration | dict[str, 
             "configuration_id": 999990,
             "cpe_model": "887VAG",
             "vendor": "cisco",
-        }
+        },
     ]
 
 

@@ -26,4 +26,4 @@ class CPEBusinessProduct(orm.TimestampedDatabaseModel):
     tscm_checks: Mapped[list["TSCMCheck"]] = relationship(
         cascade="all, delete-orphan", back_populates="service", lazy="selectin"
     )
-    cpes: Mapped[list["CPE"]] = relationship(back_populates="service", lazy="selectin")
+    cpes: Mapped[list["CPE"]] = relationship(cascade="all, delete-orphan", back_populates="service", lazy="selectin")

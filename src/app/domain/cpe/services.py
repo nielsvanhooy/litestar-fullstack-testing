@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.domain.cpe_business_product.dependencies import provides_cpe_business_service
+from app.domain.cpe_product_configuration.dependencies import provides_product_config_service
 from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
 from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
@@ -32,6 +33,7 @@ class CPEService(SQLAlchemyAsyncRepositoryService[CPE]):
         if isinstance(data, dict):
             data_business_product_id = data.get("business_service", None)
             data_vendor_id = data.get("vendor", None)
+            data_prd_config_id = data.get("product_configuration", None)
 
         business_service = await anext(provides_cpe_business_service(db_session=self.repository.session))
         business_product = await business_service.get(data_business_product_id, id_attribute="name")
@@ -39,8 +41,12 @@ class CPEService(SQLAlchemyAsyncRepositoryService[CPE]):
         vendor_service = await anext(provides_cpe_vendor_service(db_session=self.repository.session))
         vendor_product = await vendor_service.get(data_vendor_id, id_attribute="name")
 
+        prd_config_service = await anext(provides_product_config_service(db_session=self.repository.session))
+        prd_config = await prd_config_service.get(data_prd_config_id, id_attribute="configuration_id")
+
         db_obj = await self.to_model(data, "create")
         db_obj.vendor = vendor_product
         db_obj.service = business_product
+        db_obj.product_configuration = prd_config
 
         return await super().create(db_obj)

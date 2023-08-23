@@ -34,6 +34,7 @@ class CreateCPE:
     mgmt_ip: str
     vendor: str
     business_service: str
+    product_configuration: int
     sec_mgmt_ip: str | None = None
 
 
@@ -63,9 +64,10 @@ class UpdateCPE:
     sec_mgmt_ip: str | None = None
     vendor: str | None = None
     business_service: str | None = None
+    product_configuration: int | None = None
 
 
 class CPEUpdateDTO(DataclassDTO[UpdateCPE]):
     """User Update."""
 
-    config = dto.config()
+    config = dto.config(rename_strategy="lower")

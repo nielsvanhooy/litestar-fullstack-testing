@@ -70,7 +70,7 @@ routes: list[ControllerRouterHandler] = [
     cpe_business_product.controllers.CpeBusinessProductController,
     cpe_vendor.controllers.CpeVendorController,
     tscm.controllers.TscmController,
-    cpe_product_configuration.controllers.CpeProductConfigurationController
+    cpe_product_configuration.controllers.CpeProductConfigurationController,
 ]
 
 if settings.worker.WEB_ENABLED:

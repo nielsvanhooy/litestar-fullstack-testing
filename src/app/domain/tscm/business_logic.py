@@ -14,4 +14,6 @@ async def perform_tscm_check(device_id: str) -> None:
         tscm_service = await anext(provides_tscm_service(db_session=db_session))
 
         cpe = await cpe_service.get(device_id)
-        return await tscm_service.vendor_product_checks(cpe.vendor.name, cpe.service.name)
+        return await tscm_service.vendor_product_checks(
+            cpe.vendor.name, cpe.service.name, cpe.product_configuration.cpe_model
+        )

@@ -9,6 +9,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 if TYPE_CHECKING:
     from app.domain.cpe_business_product.models import CPEBusinessProduct
+    from app.domain.cpe_product_configuration.models import CPEProductConfiguration
     from app.domain.cpe_vendor.models import CPEVendor
 
 __all__ = ["CPE"]
@@ -41,6 +42,8 @@ class CPE(CPEBase):
     # ------------
     vendor_id: Mapped[UUID] = mapped_column(ForeignKey("vendor.id", ondelete="CASCADE"))
     service_id: Mapped[UUID] = mapped_column(ForeignKey("business_product.id", ondelete="CASCADE"))
+    product_configuration_id: Mapped[UUID] = mapped_column(ForeignKey("product_configuration.id", ondelete="CASCADE"))
 
     vendor: Mapped[CPEVendor] = relationship(lazy="selectin")
     service: Mapped[CPEBusinessProduct] = relationship(lazy="selectin")
+    product_configuration: Mapped[CPEProductConfiguration] = relationship(lazy="selectin")

@@ -1,5 +1,8 @@
 from typing import TYPE_CHECKING
 
+from app.domain.tscm.dependencies import provides_tscm_service
+from app.lib.db.base import session
+
 if TYPE_CHECKING:
     from httpx import AsyncClient
 
@@ -68,9 +71,25 @@ async def test_tscm_check_delete(client: "AsyncClient", superuser_token_headers:
 
 
 async def test_perform_tscm_check(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
-    response = await client.post("/api/tscm/TESM1233/check", headers=superuser_token_headers)
+    response = await client.post("/api/tscm/TESM1234/check", headers=superuser_token_headers)
     assert response.status_code == 201
     assert int(response.json()["total"]) > 0
 
 
 ######## refactor this back to the unit test part but for now its ok
+async def test_returned_checks_with_replaced_parents():
+    db = session()
+    async with db as db_session:
+        tscm_service = await anext(provides_tscm_service(db_session=db_session))
+        checks = await tscm_service.vendor_product_checks("cisco", "VPN", "3600")
+        assert checks[0].key == "ACL10"
+        assert checks[1].key == "ACL2-3-exception-3600"
+
+
+async def test_returned_checks_without_replaced_parents():
+    db = session()
+    async with db as db_session:
+        tscm_service = await anext(provides_tscm_service(db_session=db_session))
+        checks = await tscm_service.vendor_product_checks("cisco", "VPN", "3800")
+        assert checks[0].key == "ACL10"
+        assert checks[1].key == "ACL2-3"

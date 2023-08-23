@@ -69,3 +69,7 @@ TSCM_CHECK_CPE = "/api/tscm/{device_id:str}/check"
 
 ########## CPE Product Configurations
 CPE_PROD_CONFIGS = "/api/product-configurations"
+CPE_PROD_CONFIGS_DETAIL = "/api/product-configurations/{product_configuration_id:str}"
+CPE_PROD_CONFIGS_CREATE = "/api/product-configurations"
+CPE_PROD_CONFIGS_UPDATE = "/api/product-configurations/{product_configuration_id:str}"
+CPE_PROD_CONFIGS_DELETE = "/api/product-configurations/{product_configuration_id:str}"

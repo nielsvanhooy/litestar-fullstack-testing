@@ -110,7 +110,8 @@ async def _seed_db(
         raw_cpes: Test CPES to add to the database
         raw_cpe_business_products: Test business products to add to the database
         raw_cpe_vendors: Test vendors to add to the database
-        raw_tscm_checks: test TSCM Checks to add to the database
+        raw_tscm_checks: Test TSCM Checks to add to the database
+        raw_product_configurations: Test CPE Product configuration to add to the database
     """
 
     from app.domain.accounts.services import UserService
@@ -151,15 +152,15 @@ async def _seed_db(
             await tscm_services.create(raw_tscm_check)
         await tscm_services.repository.session.commit()
 
-    async with CPEService.new(sessionmaker()) as cpes_services:
-        for raw_cpe in raw_cpes:
-            await cpes_services.create(raw_cpe)
-        await cpes_services.repository.session.commit()
-
     async with CPEProductConfigurationService.new(sessionmaker()) as cpes_prod_config_service:
         for raw_product_configuration in raw_product_configurations:
             await cpes_prod_config_service.create(raw_product_configuration)
         await cpes_prod_config_service.repository.session.commit()
+
+    async with CPEService.new(sessionmaker()) as cpes_services:
+        for raw_cpe in raw_cpes:
+            await cpes_services.create(raw_cpe)
+        await cpes_services.repository.session.commit()
 
     yield
 

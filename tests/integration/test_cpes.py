@@ -27,6 +27,7 @@ async def test_cpes_create(client: "AsyncClient", superuser_token_headers: dict[
             "sec_mgmt_ip": None,
             "vendor": "cisco",
             "business_service": "VPN",
+            "product_configuration": 999990,
         },
         headers=superuser_token_headers,
     )
