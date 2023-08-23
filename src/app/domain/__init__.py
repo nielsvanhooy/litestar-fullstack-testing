@@ -16,6 +16,7 @@ from app.domain.accounts.models import User
 from app.domain.analytics.dtos import NewUsersByWeek
 from app.domain.cpe.models import CPE
 from app.domain.cpe_business_product.models import CPEBusinessProduct
+from app.domain.cpe_product_configuration.models import CPEProductConfiguration
 from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.tags.models import Tag
 from app.domain.teams.models import Team
@@ -29,6 +30,7 @@ from . import (
     analytics,
     cpe,
     cpe_business_product,
+    cpe_product_configuration,
     cpe_vendor,
     openapi,
     plugins,
@@ -68,6 +70,7 @@ routes: list[ControllerRouterHandler] = [
     cpe_business_product.controllers.CpeBusinessProductController,
     cpe_vendor.controllers.CpeVendorController,
     tscm.controllers.TscmController,
+    cpe_product_configuration.controllers.CpeProductConfigurationController
 ]
 
 if settings.worker.WEB_ENABLED:
@@ -82,6 +85,7 @@ __all__ = [
     "web",
     "cpe",
     "cpe_business_product",
+    "cpe_product_configuration",
     "cpe_vendor",
     "tscm",
     "urls",
@@ -148,6 +152,8 @@ signature_namespace: Mapping[str, Any] = {
     "CPEVendorService": cpe_vendor.services.CPEVendorService,
     "CPEBusinessProduct": CPEBusinessProduct,
     "CPEBusinessProductService": cpe_business_product.services.CPEBusinessProductService,
+    "CPEProductConfiguration": CPEProductConfiguration,
+    "CPEProductConfigurationService": cpe_product_configuration.services.CPEProductConfigurationService,
     "TSCMCheck": TSCMCheck,
     "TscmService": tscm.services.TscmService,
 }

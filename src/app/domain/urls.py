@@ -65,3 +65,7 @@ TSCM_LIST_CREATE = "/api/tscm"
 TSCM_LIST_DELETE = "/api/tscm/{tscm_check_id:str}"
 TSCM_LIST_UPDATE = "/api/tscm/{tscm_check_id:str}"
 TSCM_CHECK_CPE = "/api/tscm/{device_id:str}/check"
+
+
+########## CPE Product Configurations
+CPE_PROD_CONFIGS = "/api/product-configurations"

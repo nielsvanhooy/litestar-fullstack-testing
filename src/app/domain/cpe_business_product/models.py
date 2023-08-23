@@ -15,10 +15,14 @@ __all__ = ["CPEBusinessProduct"]
 
 
 class CPEBusinessProduct(orm.TimestampedDatabaseModel):
-    __tablename__ = "business_product"  # type: ignore[assignment]
+    __tablename__ = "business_product"
 
     key: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
     name: Mapped[str] = mapped_column(String(60), nullable=False, unique=True)
+
+    # -----------
+    # ORM Relationships
+    # ------------
     tscm_checks: Mapped[list["TSCMCheck"]] = relationship(
         cascade="all, delete-orphan", back_populates="service", lazy="selectin"
     )

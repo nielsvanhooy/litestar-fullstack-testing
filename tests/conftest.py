@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from app.domain.cpe_vendor.models import CPEVendor
     from app.domain.teams.models import Team
     from app.domain.tscm.models import TSCMCheck
+    from app.domain.cpe_product_configuration.models import CPEProductConfiguration
 
 
 @pytest.fixture(scope="session")
@@ -251,6 +252,28 @@ def fx_raw_teams() -> list[Team | dict[str, Any]]:
             "name": "Test Assessment Team",
             "description": "This is a description for a migration team.",
             "owner_id": "6ef29f3c-3560-4d15-ba6b-a2e5c721e4d3",
+        }
+    ]
+
+
+@pytest.fixture(name="raw_product_configurations")
+def fx_raw_product_configurations() -> list[CPEProductConfiguration | dict[str, Any]]:
+    """Unstructured CPE product configuration representations."""
+
+    return [
+        {
+            "id": "76175388-5fb9-42ec-b42d-701e012ce7db",
+            "description": "product configuration for a device",
+            "configuration_id": 99999,
+            "cpe_model": "3600",
+            "vendor": "cisco",
+        },
+        {
+            "id": "f5c6e2c5-07b6-4b2c-9adf-8f9f61d449ee",
+            "description": "product configuration for a device",
+            "configuration_id": 999990,
+            "cpe_model": "887VAG",
+            "vendor": "cisco",
         }
     ]
 

@@ -15,6 +15,7 @@ from sqlalchemy.pool import NullPool
 from app.domain.accounts.models import User
 from app.domain.cpe.models import CPE
 from app.domain.cpe_business_product.models import CPEBusinessProduct
+from app.domain.cpe_product_configuration.models import CPEProductConfiguration
 from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.security import auth
 from app.domain.teams.models import Team
@@ -97,6 +98,7 @@ async def _seed_db(
     raw_cpe_vendors: list[CPEVendor | dict[str, Any]],
     raw_tscm_checks: list[TSCMCheck | dict[str, Any]],
     raw_cpes: list[CPE | dict[str, Any]],
+    raw_product_configurations: list[CPEProductConfiguration | dict[str, Any]],
 ) -> AsyncIterator[None]:
     """Populate test database with.
 
@@ -114,6 +116,7 @@ async def _seed_db(
     from app.domain.accounts.services import UserService
     from app.domain.cpe.services import CPEService
     from app.domain.cpe_business_product.services import CPEBusinessProductService
+    from app.domain.cpe_product_configuration.services import CPEProductConfigurationService
     from app.domain.cpe_vendor.services import CPEVendorService
     from app.domain.teams.services import TeamService
     from app.domain.tscm.services import TscmService
@@ -152,6 +155,11 @@ async def _seed_db(
         for raw_cpe in raw_cpes:
             await cpes_services.create(raw_cpe)
         await cpes_services.repository.session.commit()
+
+    async with CPEProductConfigurationService.new(sessionmaker()) as cpes_prod_config_service:
+        for raw_product_configuration in raw_product_configurations:
+            await cpes_prod_config_service.create(raw_product_configuration)
+        await cpes_prod_config_service.repository.session.commit()
 
     yield
 
