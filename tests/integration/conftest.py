@@ -72,7 +72,7 @@ async def fx_engine(docker_ip: str, postgres_service: None) -> AsyncEngine:
             database="postgres",
             query={},  # type:ignore[arg-type]
         ),
-        echo=False,
+        echo=True,
         poolclass=NullPool,
     )
 
@@ -93,10 +93,10 @@ async def _seed_db(
     sessionmaker: async_sessionmaker[AsyncSession],
     raw_users: list[User | dict[str, Any]],
     raw_teams: list[Team | dict[str, Any]],
-    raw_cpes: list[CPE | dict[str, Any]],
     raw_cpe_business_products: list[CPEBusinessProduct | dict[str, Any]],
     raw_cpe_vendors: list[CPEVendor | dict[str, Any]],
     raw_tscm_checks: list[TSCMCheck | dict[str, Any]],
+    raw_cpes: list[CPE | dict[str, Any]],
 ) -> AsyncIterator[None]:
     """Populate test database with.
 
@@ -133,11 +133,6 @@ async def _seed_db(
             await teams_services.create(raw_team)
         await teams_services.repository.session.commit()
 
-    async with CPEService.new(sessionmaker()) as cpes_services:
-        for raw_cpe in raw_cpes:
-            await cpes_services.create(raw_cpe)
-        await cpes_services.repository.session.commit()
-
     async with CPEBusinessProductService.new(sessionmaker()) as cpes_business_services:
         for raw_cpe_business_product in raw_cpe_business_products:
             await cpes_business_services.create(raw_cpe_business_product)
@@ -152,6 +147,11 @@ async def _seed_db(
         for raw_tscm_check in raw_tscm_checks:
             await tscm_services.create(raw_tscm_check)
         await tscm_services.repository.session.commit()
+
+    async with CPEService.new(sessionmaker()) as cpes_services:
+        for raw_cpe in raw_cpes:
+            await cpes_services.create(raw_cpe)
+        await cpes_services.repository.session.commit()
 
     yield
 

@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+from uuid import UUID  # noqa: TCH003
+
 from litestar.contrib.sqlalchemy.base import AuditColumns, CommonTableAttributes, orm_registry
-from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column, orm_insert_sentinel
+from sqlalchemy import ForeignKey, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column, orm_insert_sentinel, relationship
+
+if TYPE_CHECKING:
+    from app.domain.cpe_business_product.models import CPEBusinessProduct
+    from app.domain.cpe_vendor.models import CPEVendor
 
 __all__ = ["CPE"]
 
@@ -28,3 +35,12 @@ class CPE(CPEBase):
     os: Mapped[str]
     mgmt_ip: Mapped[str]
     sec_mgmt_ip: Mapped[str | None]
+
+    # -----------
+    # ORM Relationships
+    # ------------
+    vendor_id: Mapped[UUID] = mapped_column(ForeignKey("vendor.id", ondelete="CASCADE"))
+    service_id: Mapped[UUID] = mapped_column(ForeignKey("business_product.id", ondelete="CASCADE"))
+
+    vendor: Mapped[CPEVendor] = relationship(lazy="selectin")
+    service: Mapped[CPEBusinessProduct] = relationship(lazy="selectin")

@@ -22,8 +22,6 @@ class TSCMCheck(orm.TimestampedDatabaseModel):
     regex: Mapped[str] = mapped_column(String(200), nullable=True, default="")
     python_code: Mapped[str] = mapped_column(Text, nullable=True, default="")
     remediation_commands: Mapped[str] = mapped_column(Text, nullable=True, default="")
-    vendor_id: Mapped[UUID] = mapped_column(ForeignKey("vendor.id", ondelete="CASCADE"))
-    service_id: Mapped[UUID] = mapped_column(ForeignKey("business_product.id", ondelete="CASCADE"))
     device_model: Mapped[str] = mapped_column(String(60), nullable=True, default="All")
     replaces_parent_check: Mapped[str] = mapped_column(String(100), nullable=True, default="None")
     has_child_checks: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -31,8 +29,11 @@ class TSCMCheck(orm.TimestampedDatabaseModel):
     # -----------
     # ORM Relationships
     # ------------
+    vendor_id: Mapped[UUID] = mapped_column(ForeignKey("vendor.id", ondelete="CASCADE"))
+    service_id: Mapped[UUID] = mapped_column(ForeignKey("business_product.id", ondelete="CASCADE"))
+
     vendor: Mapped[CPEVendor] = relationship(lazy="selectin")
-    service: Mapped[CPEBusinessProduct] = relationship(lazy="selectin")
+    service: Mapped[CPEBusinessProduct] = relationship(back_populates="tscm_checks", lazy="selectin")
 
     def __repr__(self):
         return f"TSCMCheck({self.key})"

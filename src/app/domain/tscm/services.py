@@ -2,16 +2,15 @@ from typing import Any
 
 from sqlalchemy import and_, select
 
+from app.domain.cpe_business_product.dependencies import provides_cpe_business_service
 from app.domain.cpe_business_product.models import CPEBusinessProduct
+from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
 from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.tscm.models import TSCMCheck
 from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
 
 __all__ = ["TscmService", "TscmRepository"]
-
-from app.domain.cpe_business_product.dependencies import provides_cpe_business_service
-from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
 
 
 class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
@@ -20,13 +19,13 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
     model_type = TSCMCheck
 
     async def vendor_product_checks(
-        self, vendor_name: str, business_product_name: str, model_name: str = "All"
+        self, vendor_name: str, business_product_name: str, model_name: str
     ) -> list[TSCMCheck]:
         """Statement for TSCM Checks based on the vendor and business product for a device
         todo The statement is perhaps still basic as of aug 8 still learning sqlalchemy 2.0
         """
         if selected_check := None:
-            await self.list(
+            return await self.list(
                 statement=(
                     select(TSCMCheck)
                     .join(TSCMCheck.vendor)
@@ -91,6 +90,8 @@ class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
 
         return await super().create(db_obj)
 
-    async def vendor_product_checks(self, vendor_name: str, business_product_name: str) -> list[TSCMCheck]:
+    async def vendor_product_checks(
+        self, vendor_name: str, business_product_name: str, model_name: str = "All"
+    ) -> list[TSCMCheck]:
         """Gets the TSCM Checks based on the vendor and business product for a device"""
-        return await self.repository.vendor_product_checks(vendor_name, business_product_name)
+        return await self.repository.vendor_product_checks(vendor_name, business_product_name, model_name)

@@ -91,6 +91,8 @@ def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
             "os": "iosxe",
             "mgmt_ip": "10.1.1.142",
             "sec_mgmt_ip": None,
+            "vendor": "cisco",
+            "business_service": "VPN",
         },
         {
             "device_id": "TESM1234",
@@ -98,6 +100,8 @@ def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
             "os": "iosxe",
             "mgmt_ip": "10.1.1.156",
             "sec_mgmt_ip": None,
+            "vendor": "cisco",
+            "business_service": "VPN",
         },
     ]
 

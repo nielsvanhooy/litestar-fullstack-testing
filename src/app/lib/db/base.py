@@ -55,7 +55,7 @@ engine = create_async_engine(
     future=True,
     json_serializer=serialization.to_json,
     json_deserializer=serialization.from_json,
-    echo=settings.db.ECHO,
+    echo=True,
     echo_pool=True if settings.db.ECHO_POOL == "debug" else settings.db.ECHO_POOL,
     max_overflow=settings.db.POOL_MAX_OVERFLOW,
     pool_size=settings.db.POOL_SIZE,

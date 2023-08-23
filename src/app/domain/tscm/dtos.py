@@ -19,7 +19,7 @@ __all__ = [
 
 class TscmDTO(SQLAlchemyDTO[TSCMCheck]):
     config = dto.config(
-        max_nested_depth=0,
+        max_nested_depth=1,
     )
 
 

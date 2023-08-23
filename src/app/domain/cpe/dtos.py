@@ -32,6 +32,8 @@ class CreateCPE:
     routername: str
     os: str
     mgmt_ip: str
+    vendor: str
+    business_service: str
     sec_mgmt_ip: str | None = None
 
 
@@ -59,6 +61,8 @@ class UpdateCPE:
     os: str | None = None
     mgmt_ip: str | None = None
     sec_mgmt_ip: str | None = None
+    vendor: str | None = None
+    business_service: str | None = None
 
 
 class CPEUpdateDTO(DataclassDTO[UpdateCPE]):
