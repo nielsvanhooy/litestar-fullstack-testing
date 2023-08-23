@@ -8,6 +8,10 @@ from app.lib import dto
 
 __all__ = [
     "CpeProductConfigurationDTO",
+    "CreateCpeProductConfigurationDTO",
+    "UpdateCPEProductConfiguration",
+    "CreateCPEProductConfiguration",
+    "CPEProductConfigurationUpdateDTO",
 ]
 
 
