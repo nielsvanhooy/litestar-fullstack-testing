@@ -40,18 +40,18 @@
     </style>
   </head>
   <body>
-    {{ results }}
     <ol>
-      {% for result in results %}
+
+      {% for result in body %}
       <li>
-        <a href="#{{ result.device_id }}">{{ result.device_id }}</a>
+        <a href="#{{result.device_id}}">{{result.device_id}}</a>
       </li>
       {% endfor %}
     </ol>
-    {% for result in results %}
+    {% for result in body %}
     <div class="container" id="{{ result.device_id }}">
       <h3>{{ result.device_id }}</h3>
-      {% for key, check in result.checks.items %} {% if not check.is_compliant
+      {% for key, check in result.checks.items() %} {% if not check.is_compliant
       %}
       <div class="flex-container">
         <div>
