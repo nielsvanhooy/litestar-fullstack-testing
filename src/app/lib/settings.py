@@ -347,7 +347,7 @@ class EmailSettings(BaseSettings):
     MAIL_STARTTLS: bool = False
     MAIL_SSL_TLS: bool = False
     MAIL_FROM: EmailStr = "test@email.com"
-    TEMPLATE_FOLDER: DirectoryPath | None = None
+    TEMPLATE_FOLDER: DirectoryPath | None = Path(__file__).parent / "templates"
     SUPPRESS_SEND: conint(gt=-1, lt=2) = 0  # type: ignore
 
 

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial,
+          verdana, sans-serif;
+      }
+
+      h3 {
+        line-height: 30px;
+        font-size: 32px;
+        font-weight: 700;
+      }
+
+      a {
+        color: #0af;
+        text-decoration: none;
+      }
+
+      div.flex-container {
+        display: flex;
+        border-bottom: 1px dotted #00c300;
+        margin-left: 10px;
+      }
+
+      div.flex-container:last-child {
+        border-bottom: 1px solid #00c300;
+      }
+
+      div.flex-container > div:first-child {
+        padding-left: 15px;
+        padding-top: 10px;
+        flex: 0 0 10em;
+      }
+
+      .container {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    {{ results }}
+    <ol>
+      {% for result in results %}
+      <li>
+        <a href="#{{ result.device_id }}">{{ result.device_id }}</a>
+      </li>
+      {% endfor %}
+    </ol>
+    {% for result in results %}
+    <div class="container" id="{{ result.device_id }}">
+      <h3>{{ result.device_id }}</h3>
+      {% for key, check in result.checks.items %} {% if not check.is_compliant
+      %}
+      <div class="flex-container">
+        <div>
+          <strong><i>{{ key }}</i></strong>
+        </div>
+        <div>
+          <pre>{{ check.output }}</pre>
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+    {% endfor %}
+  </body>
+</html>

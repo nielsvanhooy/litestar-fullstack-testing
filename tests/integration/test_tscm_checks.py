@@ -71,7 +71,7 @@ async def test_tscm_check_delete(client: "AsyncClient", superuser_token_headers:
 
 
 async def test_perform_tscm_check(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
-    response = await client.post("/api/tscm/TESM1234/check", headers=superuser_token_headers)
+    response = await client.post("/api/tscm/TESM1233/check", headers=superuser_token_headers)
     assert response.status_code == 201
     assert int(response.json()["total"]) > 0
 
