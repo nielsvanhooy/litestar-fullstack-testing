@@ -123,21 +123,22 @@ class TscmCheckResultRepository(SQLAlchemyAsyncRepository[TSCMCheckResult]):
         existing = await self.count(*filters, **kwargs)
         return existing > 0
 
-    async def compliant_since(self, device_id: str, date: datetime.datetime) -> bool:
+    async def compliant_since(self, device_id: str) -> bool:
         """device_id: device_id of the CPE to check
-        data: datetime object to check if device was compliant: today - datetime object
         return: boolean
 
         function does three things.
         1: check if there are any results. if not return False
         2: check the latest record if the device was online and returns the corresponding value
-        3: if check 2 was False then it looks back to older records to verify if the CPE was compliant in that timerange
+        3: if check 2 was False then it looks back to older records to verify if the CPE was compliant
+        in the timerange from MAXIMUM_CONFIG_AGE until now
         """
+        current_date = datetime.datetime.now().astimezone()
         limit_filter = LimitOffset(limit=1, offset=0)
         date_filter = BeforeAfter(
             field_name="date",
-            after=datetime.datetime.now().astimezone() - datetime.timedelta(days=settings.tscm.MAXIMUM_CONFIG_AGE),
-            before=date,
+            after=current_date - datetime.timedelta(days=settings.tscm.MAXIMUM_CONFIG_AGE),
+            before=current_date,
         )
 
         base_query = select(TSCMCheckResult).join(CPE).where(and_(CPE.device_id == device_id))
@@ -178,5 +179,5 @@ class TscmCheckResultService(SQLAlchemyAsyncRepositoryService[TSCMCheckResult]):
 
         return await super().create(db_obj)
 
-    async def compliant_since(self, device_id: str, date: datetime.datetime) -> bool:
-        return await self.repository.compliant_since(device_id, date)
+    async def compliant_since(self, device_id: str) -> bool:
+        return await self.repository.compliant_since(device_id)

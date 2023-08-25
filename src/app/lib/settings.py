@@ -362,8 +362,8 @@ class TscmSettings(BaseSettings):
         env_file=".env", env_file_encoding="utf-8", env_prefix="TSCM_", case_sensitive=False
     )
 
-    MINIMUM_CONFIG_AGE: int
-    MAXIMUM_CONFIG_AGE: int
+    MINIMUM_CONFIG_AGE: int = 2
+    MAXIMUM_CONFIG_AGE: int = 29
 
 
 @lru_cache
@@ -377,7 +377,7 @@ def load_settings() -> (
         LogSettings,
         WorkerSettings,
         EmailSettings,
-        "TscmSettings",
+        TscmSettings,
     ]
 ):
     """Load Settings file.

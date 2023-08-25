@@ -127,9 +127,6 @@ class CpeTscmCheck:
             compliancy_reason=reason,
         )
 
-        if self.is_compliant:
-            self.tscm_doc.compliancy_reason = "ALL_CHECKS_PASSED"
-
     def config_age_compliant(self, config_age: int) -> bool:
         """Main TSCM Rule:
 
@@ -160,14 +157,14 @@ class CpeTscmCheck:
             return False
         return True
 
-    def offline_compliant_not_compliant(self) -> None:
+    def offline_compliant_not_compliant(self, latest_compliancy: bool) -> None:
         """2 TSCM Rules when CPE is offline (online_status = False)
 
         if device offline and device was compliant in the last MAXIMUM_CONFIG_AGE days: compliant
         if device offline and was not compliant in the last MAXIMUM_CONFIG_AGE days: not compliant
         """
 
-        self.is_compliant = "have to make this: TSCMCheckresults"
+        self.is_compliant = latest_compliancy
         reason = "OFFLINE_COMPLIANT" if self.is_compliant else "OFFLINE_NOT_COMPLIANT"
         self._create_tscm_doc(reason=reason)
 
@@ -197,8 +194,9 @@ class CpeTscmCheck:
                 import traceback
 
                 traceback.print_exc()
+        if self.is_compliant:
+            self._create_tscm_doc(reason="ALL_CHECKS_PASSED")
 
-        self._create_tscm_doc()
         self.tscm_email_doc.is_compliant = self.is_compliant
 
     def results(self) -> dict[str, TSCMEmailDoc | list | TSCMDoc | None]:

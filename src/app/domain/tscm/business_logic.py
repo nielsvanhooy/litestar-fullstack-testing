@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from anyio import Path
 
 from app.domain.cpe.dependencies import provides_cpe_service
-from app.domain.tscm.dependencies import provides_tscm_service
+from app.domain.tscm.dependencies import provides_tscm_check_results_service, provides_tscm_service
 from app.domain.tscm.tscm import CpeTscmCheck
 from app.lib import log, worker
 from app.lib.db.base import session
@@ -24,6 +24,7 @@ async def perform_tscm_check(device_id: str) -> list[TSCMCheck]:
     async with db as db_session:
         cpe_service = await anext(provides_cpe_service(db_session=db_session))
         tscm_service = await anext(provides_tscm_service(db_session=db_session))
+        tscm_check_result_service = await anext(provides_tscm_check_results_service(db_session=db_session))
 
         cpe = await cpe_service.get(device_id)
         vendor = cpe.vendor.name
@@ -31,6 +32,7 @@ async def perform_tscm_check(device_id: str) -> list[TSCMCheck]:
         device_model = cpe.product_configuration.cpe_model
 
         tscm_checks = await tscm_service.vendor_product_checks(vendor, service, device_model)
+        latest_compliancy = await tscm_check_result_service.compliant_since(device_id)
         email_results = []
 
         count = 0
@@ -56,7 +58,7 @@ async def perform_tscm_check(device_id: str) -> list[TSCMCheck]:
                     email_results.append(results["tscm_email_doc"])
 
                 if not tscm_check.online_status:
-                    tscm_check.offline_compliant_not_compliant()
+                    tscm_check.offline_compliant_not_compliant(latest_compliancy)
                     results = tscm_check.results()
                     # process results
                 else:

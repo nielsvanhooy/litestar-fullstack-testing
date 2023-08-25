@@ -116,6 +116,17 @@ async def test_tscm_config_age_compliant_above_maximum(tscm_obj: "CpeTscmCheck")
     assert config_age_compliant == False
 
 
-async def test_tscm_offline_compliant_not_compliant(tscm_obj: "CpeTscmCheck") -> None:
-    tscm_obj.online_status = False
-    tscm_obj.offline_compliant_not_compliant()
+async def test_tscm_offline_compliant_not_compliant__offline_not_compliant(tscm_obj: "CpeTscmCheck") -> None:
+    latest_compliancy = False
+    tscm_obj.offline_compliant_not_compliant(latest_compliancy)
+
+    assert tscm_obj.is_compliant == False
+    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_NOT_COMPLIANT"
+
+
+async def test_tscm_offline_compliant_not_compliant__offline_compliant(tscm_obj: "CpeTscmCheck") -> None:
+    latest_compliancy = True
+    tscm_obj.offline_compliant_not_compliant(latest_compliancy)
+
+    assert tscm_obj.is_compliant == True
+    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_COMPLIANT"
