@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import datetime
 import re
 from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock
@@ -9,6 +10,9 @@ import pytest
 from litestar.testing import TestClient
 from structlog.contextvars import clear_contextvars
 from structlog.testing import CapturingLogger
+
+from app.domain.tscm.tscm import CpeTscmCheck
+from app.lib import settings
 
 if TYPE_CHECKING:
     from collections import abc
@@ -203,6 +207,27 @@ def fx_raw_tscm_checks() -> list[TSCMCheck | dict[str, Any]]:
     ]
 
 
+@pytest.fixture(name="raw_tscm_check_results")
+def fx_raw_tscm_check_results() -> list[TSCMCheck | dict[str, Any]]:
+    """Unstructured tscm check results representations."""
+    return [
+        {
+            "device_id": "TESM1234",
+            "date": datetime.datetime.now().astimezone()
+            - datetime.timedelta(days=settings.tscm.MAXIMUM_CONFIG_AGE - 3),
+            "is_online": False,
+            "is_compliant": True,
+        },
+        {
+            "device_id": "TESM1234",
+            "date": datetime.datetime.now().astimezone()
+            - datetime.timedelta(days=settings.tscm.MAXIMUM_CONFIG_AGE - 2),
+            "is_online": True,
+            "is_compliant": True,
+        },
+    ]
+
+
 @pytest.fixture(name="raw_users")
 def fx_raw_users() -> list[User | dict[str, Any]]:
     """Unstructured user representations."""
@@ -278,6 +303,18 @@ def fx_raw_product_configurations() -> list[CPEProductConfiguration | dict[str, 
             "vendor": "cisco",
         },
     ]
+
+
+@pytest.fixture(name="tscm_obj")
+def fx_tscm_obj() -> CpeTscmCheck:
+    return CpeTscmCheck(
+        device_id="TESM1234",
+        tscm_checks=[],
+        provided_config="",
+        online_status=True,
+        vendor="cisco",
+        service="VPN",
+    )
 
 
 @pytest.fixture()

@@ -18,8 +18,8 @@ async def send_email(
     to: list,
     html: str,
     attachments: list | None = None,
-    template_body: Any,
-    template_name: str,
+    template_body: Any | None = None,
+    template_name: str | None = None,
 ) -> bool:
     """Args:
         ctx: an argument of SAQ worker
@@ -27,6 +27,8 @@ async def send_email(
         to: list of recipients
         html: the html string to send
         attachments: list of attachments defaults to empty list
+        template_body: list/dict to be rendered by jinja2
+        template_name: name of the template to be rendered
 
     Returns:
         boolean True if mail was send

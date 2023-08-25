@@ -24,6 +24,8 @@ __all__ = [
     "LogSettings",
     "WorkerSettings",
     "ServerSettings",
+    "EmailSettings",
+    "TscmSettings",
     "app",
     "db",
     "openapi",
@@ -31,6 +33,8 @@ __all__ = [
     "server",
     "log",
     "worker",
+    "email",
+    "tscm",
 ]
 
 DEFAULT_MODULE_NAME = "app"
@@ -351,6 +355,17 @@ class EmailSettings(BaseSettings):
     SUPPRESS_SEND: conint(gt=-1, lt=2) = 0  # type: ignore
 
 
+class TscmSettings(BaseSettings):
+    """TSCM settings for the Technical state compliancy monitoring of cpe's"""
+
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", env_prefix="TSCM_", case_sensitive=False
+    )
+
+    MINIMUM_CONFIG_AGE: int
+    MAXIMUM_CONFIG_AGE: int
+
+
 @lru_cache
 def load_settings() -> (
     tuple[
@@ -362,6 +377,7 @@ def load_settings() -> (
         LogSettings,
         WorkerSettings,
         EmailSettings,
+        "TscmSettings",
     ]
 ):
     """Load Settings file.
@@ -411,11 +427,12 @@ def load_settings() -> (
 
         EmailSettings.model_rebuild()
         email: EmailSettings = EmailSettings()
+        tscm: TscmSettings = TscmSettings()
 
     except ValidationError as e:
         print("Could not load settings. %s", e)  # noqa: T201
         raise e from e
-    return (app, redis, db, openapi, server, log, worker, email)
+    return (app, redis, db, openapi, server, log, worker, email, tscm)
 
 
 (
@@ -427,4 +444,5 @@ def load_settings() -> (
     log,
     worker,
     email,
+    tscm,
 ) = load_settings()

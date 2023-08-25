@@ -19,7 +19,7 @@ from app.domain.cpe_product_configuration.models import CPEProductConfiguration
 from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.security import auth
 from app.domain.teams.models import Team
-from app.domain.tscm.models import TSCMCheck
+from app.domain.tscm.models import TSCMCheck, TSCMCheckResult
 from app.lib import db, worker
 from tests.docker_service import DockerServiceRegistry, postgres_responsive, redis_responsive
 
@@ -99,6 +99,7 @@ async def _seed_db(
     raw_tscm_checks: list[TSCMCheck | dict[str, Any]],
     raw_cpes: list[CPE | dict[str, Any]],
     raw_product_configurations: list[CPEProductConfiguration | dict[str, Any]],
+    raw_tscm_check_results: list[TSCMCheckResult | dict[str, Any]],
 ) -> AsyncIterator[None]:
     """Populate test database with.
 
@@ -112,6 +113,7 @@ async def _seed_db(
         raw_cpe_vendors: Test vendors to add to the database
         raw_tscm_checks: Test TSCM Checks to add to the database
         raw_product_configurations: Test CPE Product configuration to add to the database
+        raw_tscm_check_results: Test TSCM Check results to add to the database
     """
 
     from app.domain.accounts.services import UserService
@@ -120,7 +122,7 @@ async def _seed_db(
     from app.domain.cpe_product_configuration.services import CPEProductConfigurationService
     from app.domain.cpe_vendor.services import CPEVendorService
     from app.domain.teams.services import TeamService
-    from app.domain.tscm.services import TscmService
+    from app.domain.tscm.services import TscmCheckResultService, TscmService
     from app.lib.db import orm  # pylint: disable=[import-outside-toplevel,unused-import]
 
     metadata = orm.DatabaseModel.registry.metadata
@@ -161,6 +163,11 @@ async def _seed_db(
         for raw_cpe in raw_cpes:
             await cpes_services.create(raw_cpe)
         await cpes_services.repository.session.commit()
+
+    async with TscmCheckResultService.new(sessionmaker()) as tscm_check_results_services:
+        for raw_tscm_check_result in raw_tscm_check_results:
+            await tscm_check_results_services.create(raw_tscm_check_result)
+        await tscm_check_results_services.repository.session.commit()
 
     yield
 

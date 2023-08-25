@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from app.domain.cpe_business_product.models import CPEBusinessProduct
     from app.domain.cpe_product_configuration.models import CPEProductConfiguration
     from app.domain.cpe_vendor.models import CPEVendor
+    from app.domain.tscm.models import TSCMCheckResult
 
 __all__ = ["CPE"]
 
@@ -47,3 +48,4 @@ class CPE(CPEBase):
     vendor: Mapped[CPEVendor] = relationship(lazy="selectin")
     service: Mapped[CPEBusinessProduct] = relationship(lazy="selectin")
     product_configuration: Mapped[CPEProductConfiguration] = relationship(lazy="selectin")
+    tscm_check_results: Mapped[list[TSCMCheckResult]] = relationship(lazy="noload")

@@ -2,16 +2,17 @@ from __future__ import annotations
 
 import datetime
 import re
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from app.domain.tscm.helpers import stdoutIO
+from app.domain.tscm.helpers import stdoutio
+from app.lib import settings
 
 __all__ = ["CpeTscmCheck", "TSCMDoc", "TSCMEmailDoc", "TSCMPerCheckDetailDoc"]
 
 
 if TYPE_CHECKING:
-    from app.domain import TSCMCheck
+    from app.domain.tscm.models import TSCMCheck
 
 
 @dataclass
@@ -60,10 +61,12 @@ class CpeTscmCheck:
         self.online_status = online_status
         self.vendor = vendor
         self.service = service
-        self.timestamp = datetime.datetime.now().strftime("%Y-%m-%d")  # refactor to env file for different countries
+        self.timestamp = (
+            datetime.datetime.now().astimezone().strftime("%Y-%m-%d")
+        )  # refactor to env file for different countries
 
-        self.MINIMUM_CONFIG_AGE = 2
-        self.MAXIMUM_CONFIG_AGE = 29
+        self.MINIMUM_CONFIG_AGE: int = settings.tscm.MINIMUM_CONFIG_AGE
+        self.MAXIMUM_CONFIG_AGE: int = settings.tscm.MAXIMUM_CONFIG_AGE
 
         self.remediation_instructions = {"device_id": self.device_id, "commands": []}
 
@@ -71,30 +74,31 @@ class CpeTscmCheck:
         self.is_compliant = True
 
         ## results
-        self.tscm_doc = None
-        self.tscm_per_check_detail_result = []
-        self.tscm_email_doc = asdict(TSCMEmailDoc(device_id=self.device_id, is_compliant=self.is_compliant))
+        self.tscm_doc: TSCMDoc | None = None
+        self.tscm_per_check_detail_result: list = []
+        self.tscm_email_doc: TSCMEmailDoc = TSCMEmailDoc(device_id=self.device_id, is_compliant=self.is_compliant)
+
+    def __repr__(self) -> str:
+        return f"CpeTscmCheck({self.device_id})"
 
     def _validate(self, python_code: str, check_name: str) -> tuple[bool, str, str]:
-        if python_code:
-            data = {
-                "config": self.provided_config,
-                "validated": False,
-            }
+        data = {
+            "config": self.provided_config,
+            "validated": False,
+        }
 
-            code = compile(python_code, check_name, "exec")
-            allowed_builtins = {"__builtins__": {"re": re, "print": print, "len": len}}
-            exec(code, allowed_builtins, data)
+        code = compile(python_code, check_name, "exec")
+        allowed_builtins = {"__builtins__": {"re": re, "print": print, "len": len}}
+        exec(code, allowed_builtins, data)  # noqa: S102
 
-            is_validated = data.get("validated", False)
-            deviation = data.get("deviation", "")
-            remediation = data.get("remediation")
+        is_validated = data.get("validated", False)
+        deviation = data.get("deviation", "")
+        remediation = data.get("remediation")
 
-            return is_validated, deviation, remediation
-        return None
+        return is_validated, deviation, remediation
 
     def _create_per_check_results(
-        self, check_is_compliant: bool, deviation: str, remediation, output: str, check: TSCMCheck
+        self, check_is_compliant: bool, deviation: str, remediation: str, output: str, check: TSCMCheck
     ) -> None:
         """Function is used to process the results from the TSCM checks.
         tscm_per_check_detail_result: details of the tscm check per check. can be used for exporting to Splunk/Elastic
@@ -113,22 +117,18 @@ class CpeTscmCheck:
 
         self.tscm_per_check_detail_result.append(per_check_detail_doc)
 
-    def _create_tscm_doc(self, reason: str | None = None) -> None:
-        self.tscm_doc = asdict(
-            TSCMDoc(
-                date=self.timestamp,
-                device_id=self.device_id,
-                service=self.service,
-                is_compliant=self.is_compliant,
-                is_online=self.online_status,
-                compliancy_reason=reason,
-            )
+    def _create_tscm_doc(self, reason: str = "") -> None:
+        self.tscm_doc = TSCMDoc(
+            date=self.timestamp,
+            device_id=self.device_id,
+            service=self.service,
+            is_compliant=self.is_compliant,
+            is_online=self.online_status,
+            compliancy_reason=reason,
         )
 
         if self.is_compliant:
-            self.tscm_doc |= {
-                "compliancy_reason": "ALL_CHECKS_PASSED",
-            }
+            self.tscm_doc.compliancy_reason = "ALL_CHECKS_PASSED"
 
     def config_age_compliant(self, config_age: int) -> bool:
         """Main TSCM Rule:
@@ -150,29 +150,28 @@ class CpeTscmCheck:
             self._create_tscm_doc(reason="CONFIG_OUT_OF_DATE")
 
             if self.online_status:
-                self.tscm_email_doc["checks"]["config_age"] = {
-                    "output": f"Device online but config older than expected ( currently {self.config_age} days!)"
+                self.tscm_email_doc.checks["config_age"] = {
+                    "output": f"Device online but config older than expected ( currently {config_age} days!)"
                     f"no further checks have been performed due to config out of date\n",
                     "is_compliant": False,
                 }
-                self.tscm_email_doc["is_compliant"] = False
+                self.tscm_email_doc.is_compliant = False
+
             return False
         return True
 
-    def offline_compliant_not_compliant(self, email_results=False):
+    def offline_compliant_not_compliant(self) -> None:
         """2 TSCM Rules when CPE is offline (online_status = False)
 
         if device offline and device was compliant in the last MAXIMUM_CONFIG_AGE days: compliant
         if device offline and was not compliant in the last MAXIMUM_CONFIG_AGE days: not compliant
         """
-        if not email_results:
-            self.tscm_email_doc = {}
 
         self.is_compliant = "have to make this: TSCMCheckresults"
         reason = "OFFLINE_COMPLIANT" if self.is_compliant else "OFFLINE_NOT_COMPLIANT"
         self._create_tscm_doc(reason=reason)
 
-    def online_compliant_not_compliant(self):
+    def online_compliant_not_compliant(self) -> None:
         """2 TSCM rules when CPE is online.
 
         if device online and device not compliant: not compliant
@@ -180,10 +179,10 @@ class CpeTscmCheck:
         """
         for check in self.tscm_checks:
             try:
-                with stdoutIO() as out:
+                with stdoutio() as out:
                     check_is_compliant, deviation, remediation = self._validate(check.python_code, self.provided_config)
                     output = out.getvalue()
-                    self.tscm_email_doc["checks"][check.key] = {
+                    self.tscm_email_doc.checks[check.key] = {
                         "output": output,
                         "is_compliant": check_is_compliant,
                     }
@@ -200,9 +199,9 @@ class CpeTscmCheck:
                 traceback.print_exc()
 
         self._create_tscm_doc()
-        self.tscm_email_doc["is_compliant"] = self.is_compliant
+        self.tscm_email_doc.is_compliant = self.is_compliant
 
-    def results(self):
+    def results(self) -> dict[str, TSCMEmailDoc | list | TSCMDoc | None]:
         return {
             "tscm_per_check_detail": self.tscm_per_check_detail_result,
             "tscm_doc": self.tscm_doc,

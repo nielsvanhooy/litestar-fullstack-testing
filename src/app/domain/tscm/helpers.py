@@ -2,14 +2,13 @@ import contextlib
 import sys
 from io import StringIO
 
-__all__ = ["stdoutIO"]
+__all__ = ["stdoutio"]
+
+from collections.abc import Generator
 
 
 @contextlib.contextmanager
-def stdoutIO(stdout=None):
+def stdoutio() -> Generator[StringIO, None, None]:
     old = sys.stdout
-    if stdout is None:
-        stdout = StringIO()
-    sys.stdout = stdout
-    yield stdout
+    yield StringIO()
     sys.stdout = old
