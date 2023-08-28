@@ -24,6 +24,7 @@ class TSCMEmailDoc:
 
 @dataclass
 class TSCMPerCheckDetailDoc:
+    id: str
     vendor: str
     device_id: str
     check_key: str
@@ -37,6 +38,7 @@ class TSCMPerCheckDetailDoc:
 
 @dataclass
 class TSCMDoc:
+    id: str
     date: str
     device_id: str
     service: str
@@ -74,6 +76,7 @@ class CpeTscmCheck:
         self.is_compliant = True
 
         ## results
+        self.doc_id = f"{self.timestamp}-{self.device_id}"
         self.tscm_doc: TSCMDoc | None = None
         self.tscm_per_check_detail_result: list = []
         self.tscm_email_doc: TSCMEmailDoc = TSCMEmailDoc(device_id=self.device_id, is_compliant=self.is_compliant)
@@ -93,9 +96,9 @@ class CpeTscmCheck:
 
         is_validated = data.get("validated", False)
         deviation = data.get("deviation", "")
-        remediation = data.get("remediation")
+        remediation = data.get("remediation", "")
 
-        return is_validated, deviation, remediation
+        return is_validated, deviation, remediation  # type: ignore[return-value]
 
     def _create_per_check_results(
         self, check_is_compliant: bool, deviation: str, remediation: str, output: str, check: TSCMCheck
@@ -105,6 +108,7 @@ class CpeTscmCheck:
         """
 
         per_check_detail_doc = TSCMPerCheckDetailDoc(
+            id=f"{self.doc_id}-{check.key}",
             vendor=self.vendor,
             device_id=self.device_id,
             check_key=check.key,
@@ -119,6 +123,7 @@ class CpeTscmCheck:
 
     def _create_tscm_doc(self, reason: str = "") -> None:
         self.tscm_doc = TSCMDoc(
+            id=self.doc_id,
             date=self.timestamp,
             device_id=self.device_id,
             service=self.service,
@@ -196,6 +201,8 @@ class CpeTscmCheck:
                 traceback.print_exc()
         if self.is_compliant:
             self._create_tscm_doc(reason="ALL_CHECKS_PASSED")
+        else:
+            self._create_tscm_doc(reason="NOT_ALL_CHECKS_HAVE_PASSED")
 
         self.tscm_email_doc.is_compliant = self.is_compliant
 

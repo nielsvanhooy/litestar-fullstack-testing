@@ -48,7 +48,7 @@ class TSCMCheckResult(orm.TimestampedDatabaseModel):
     # -----------
     # ORM Relationships
     # ------------
-    cpe_id: Mapped[UUID] = mapped_column(ForeignKey("cpe.device_id", ondelete="CASCADE"))
+    cpe_id: Mapped[str] = mapped_column(ForeignKey("cpe.device_id", ondelete="CASCADE"))
     cpe: Mapped[CPE] = relationship(back_populates="tscm_check_results", lazy="select")
 
     def __repr__(self) -> str:

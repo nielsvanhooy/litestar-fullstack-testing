@@ -121,7 +121,7 @@ async def test_tscm_offline_compliant_not_compliant__offline_not_compliant(tscm_
     tscm_obj.offline_compliant_not_compliant(latest_compliancy)
 
     assert tscm_obj.is_compliant == False
-    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_NOT_COMPLIANT"
+    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_NOT_COMPLIANT"  # type: ignore[union-attr]
 
 
 async def test_tscm_offline_compliant_not_compliant__offline_compliant(tscm_obj: "CpeTscmCheck") -> None:
@@ -129,4 +129,4 @@ async def test_tscm_offline_compliant_not_compliant__offline_compliant(tscm_obj:
     tscm_obj.offline_compliant_not_compliant(latest_compliancy)
 
     assert tscm_obj.is_compliant == True
-    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_COMPLIANT"
+    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_COMPLIANT"  # type: ignore[union-attr]

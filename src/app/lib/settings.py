@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Final, Literal
 
 from dotenv import load_dotenv
+from elasticsearch import AsyncElasticsearch
 from litestar.data_extractors import RequestExtractorField, ResponseExtractorField  # noqa: TCH002
 from pydantic import DirectoryPath, EmailStr, ValidationError, conint, field_validator
 from pydantic_settings import (
@@ -35,6 +36,8 @@ __all__ = [
     "worker",
     "email",
     "tscm",
+    "elasticsearch",
+    "elasticsearch_session",
 ]
 
 DEFAULT_MODULE_NAME = "app"
@@ -366,6 +369,20 @@ class TscmSettings(BaseSettings):
     MAXIMUM_CONFIG_AGE: int = 29
 
 
+class ElasticSearchSettings(BaseSettings):
+    """ElasticSearch settings for exporting purposes"""
+
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", env_prefix="ELASTICSEARCH_", case_sensitive=False
+    )
+
+    AVAILABLE: bool = False
+    HOST: str | None = None
+    PORT: int = 9200
+    USERNAME: str = "elastic"
+    PASSWORD: str = "changeme"
+
+
 @lru_cache
 def load_settings() -> (
     tuple[
@@ -378,6 +395,8 @@ def load_settings() -> (
         WorkerSettings,
         EmailSettings,
         TscmSettings,
+        ElasticSearchSettings,
+        AsyncElasticsearch,
     ]
 ):
     """Load Settings file.
@@ -428,11 +447,15 @@ def load_settings() -> (
         EmailSettings.model_rebuild()
         email: EmailSettings = EmailSettings()
         tscm: TscmSettings = TscmSettings()
+        elasticsearch: ElasticSearchSettings = ElasticSearchSettings()
+        elasticsearch_session: AsyncElasticsearch = AsyncElasticsearch(
+            f"https://{elasticsearch.HOST}:{elasticsearch.PORT}"
+        )
 
     except ValidationError as e:
         print("Could not load settings. %s", e)  # noqa: T201
         raise e from e
-    return (app, redis, db, openapi, server, log, worker, email, tscm)
+    return (app, redis, db, openapi, server, log, worker, email, tscm, elasticsearch, elasticsearch_session)
 
 
 (
@@ -445,4 +468,6 @@ def load_settings() -> (
     worker,
     email,
     tscm,
+    elasticsearch,
+    elasticsearch_session,
 ) = load_settings()
