@@ -29,7 +29,7 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
         """Statement for TSCM Checks based on the vendor and business product for a device
         todo The statement is perhaps still basic as of aug 8 still learning sqlalchemy 2.0
         """
-        if selected_check := None:
+        if selected_check:
             return await self.list(
                 statement=(
                     select(TSCMCheck)

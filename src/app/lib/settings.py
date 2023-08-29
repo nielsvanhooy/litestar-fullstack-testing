@@ -448,8 +448,11 @@ def load_settings() -> (
         email: EmailSettings = EmailSettings()
         tscm: TscmSettings = TscmSettings()
         elasticsearch: ElasticSearchSettings = ElasticSearchSettings()
+
         elasticsearch_session: AsyncElasticsearch = AsyncElasticsearch(
-            f"https://{elasticsearch.HOST}:{elasticsearch.PORT}"
+            f"http://{elasticsearch.HOST}:{elasticsearch.PORT}",
+            basic_auth=(elasticsearch.USERNAME, elasticsearch.PASSWORD),
+            verify_certs=False,
         )
 
     except ValidationError as e:
