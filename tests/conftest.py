@@ -1209,7 +1209,7 @@ def fx_tscm_obj() -> CpeTscmCheck:
         online_status=True,
         vendor="cisco",
         service="VPN",
-        report=export_report
+        report=export_report,
     )
 
 

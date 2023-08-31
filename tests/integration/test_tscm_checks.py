@@ -72,10 +72,10 @@ async def test_tscm_check_delete(client: "AsyncClient", superuser_token_headers:
     assert response.status_code == 204
 
 
-# async def test_perform_tscm_check(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
-#     response = await client.post("/api/tscm/TESM1233/check", headers=superuser_token_headers)
-#     assert response.status_code == 201
-#     assert int(response.json()["total"]) > 0
+async def test_perform_tscm_check(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
+    response = await client.post("/api/tscm/TESM1233/check", headers=superuser_token_headers)
+    assert response.status_code == 201
+    assert int(response.json()["total"]) > 0
 
 
 ######## refactor this back to the unit test part but for now its ok
@@ -107,7 +107,7 @@ async def test_tscm_config_age_compliant_above_minimum(tscm_obj: "CpeTscmCheck")
     config_age_compliant = tscm_obj.config_age_compliant(config_age=tscm_obj.MINIMUM_CONFIG_AGE + 1)
     assert config_age_compliant is False
     assert tscm_obj.is_compliant is False
-    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "CONFIG_OUT_OF_DATE"  # type: ignore[union-attr]
+    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "CONFIG_OUT_OF_DATE"
     assert "config_age" in tscm_obj.tscm_email_doc.checks
 
 
@@ -121,7 +121,7 @@ async def test_tscm_offline_compliant_not_compliant__offline_not_compliant(tscm_
     tscm_obj.offline_compliant_not_compliant(latest_compliancy)
 
     assert tscm_obj.is_compliant is False
-    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "OFFLINE_NOT_COMPLIANT"  # type: ignore[union-attr]
+    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "OFFLINE_NOT_COMPLIANT"
 
 
 async def test_tscm_offline_compliant_not_compliant__offline_compliant(tscm_obj: "CpeTscmCheck") -> None:
@@ -129,4 +129,4 @@ async def test_tscm_offline_compliant_not_compliant__offline_compliant(tscm_obj:
     tscm_obj.offline_compliant_not_compliant(latest_compliancy)
 
     assert tscm_obj.is_compliant is True
-    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "OFFLINE_COMPLIANT"  # type: ignore[union-attr]
+    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "OFFLINE_COMPLIANT"
