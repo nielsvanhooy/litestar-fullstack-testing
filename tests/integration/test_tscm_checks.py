@@ -99,34 +99,34 @@ async def test_returned_checks_without_replaced_parents() -> None:
 
 async def test_tscm_config_age_compliant_below_minimum(tscm_obj: "CpeTscmCheck") -> None:
     config_age_compliant = tscm_obj.config_age_compliant(config_age=tscm_obj.MINIMUM_CONFIG_AGE - 1)
-    assert config_age_compliant == True
-    assert tscm_obj.is_compliant == True
+    assert config_age_compliant is True
+    assert tscm_obj.is_compliant is True
 
 
 async def test_tscm_config_age_compliant_above_minimum(tscm_obj: "CpeTscmCheck") -> None:
     config_age_compliant = tscm_obj.config_age_compliant(config_age=tscm_obj.MINIMUM_CONFIG_AGE + 1)
-    assert config_age_compliant == False
-    assert tscm_obj.is_compliant == False
-    assert tscm_obj.tscm_doc.compliancy_reason == "CONFIG_OUT_OF_DATE"  # type: ignore[union-attr]
+    assert config_age_compliant is False
+    assert tscm_obj.is_compliant is False
+    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "CONFIG_OUT_OF_DATE"  # type: ignore[union-attr]
     assert "config_age" in tscm_obj.tscm_email_doc.checks
 
 
 async def test_tscm_config_age_compliant_above_maximum(tscm_obj: "CpeTscmCheck") -> None:
     config_age_compliant = tscm_obj.config_age_compliant(config_age=tscm_obj.MAXIMUM_CONFIG_AGE + 1)
-    assert config_age_compliant == False
+    assert config_age_compliant is False
 
 
 async def test_tscm_offline_compliant_not_compliant__offline_not_compliant(tscm_obj: "CpeTscmCheck") -> None:
     latest_compliancy = False
     tscm_obj.offline_compliant_not_compliant(latest_compliancy)
 
-    assert tscm_obj.is_compliant == False
-    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_NOT_COMPLIANT"  # type: ignore[union-attr]
+    assert tscm_obj.is_compliant is False
+    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "OFFLINE_NOT_COMPLIANT"  # type: ignore[union-attr]
 
 
 async def test_tscm_offline_compliant_not_compliant__offline_compliant(tscm_obj: "CpeTscmCheck") -> None:
     latest_compliancy = True
     tscm_obj.offline_compliant_not_compliant(latest_compliancy)
 
-    assert tscm_obj.is_compliant == True
-    assert tscm_obj.tscm_doc.compliancy_reason == "OFFLINE_COMPLIANT"  # type: ignore[union-attr]
+    assert tscm_obj.is_compliant is True
+    assert tscm_obj.export_report.tscm_doc[0].compliancy_reason == "OFFLINE_COMPLIANT"  # type: ignore[union-attr]

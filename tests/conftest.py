@@ -11,7 +11,7 @@ from litestar.testing import TestClient
 from structlog.contextvars import clear_contextvars
 from structlog.testing import CapturingLogger
 
-from app.domain.tscm.tscm import CpeTscmCheck
+from app.domain.tscm.tscm import CpeTscmCheck, TscmExportReport
 from app.lib import settings
 
 if TYPE_CHECKING:
@@ -1201,6 +1201,7 @@ def fx_raw_product_configurations() -> list[CPEProductConfiguration | dict[str, 
 
 @pytest.fixture(name="tscm_obj")
 def fx_tscm_obj() -> CpeTscmCheck:
+    export_report = TscmExportReport()
     return CpeTscmCheck(
         device_id="TESM1234",
         tscm_checks=[],
@@ -1208,6 +1209,7 @@ def fx_tscm_obj() -> CpeTscmCheck:
         online_status=True,
         vendor="cisco",
         service="VPN",
+        report=export_report
     )
 
 
