@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from uuid import UUID  # noqa: TCH003
 
 from litestar.contrib.sqlalchemy.base import AuditColumns, CommonTableAttributes, orm_registry
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import Boolean, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column, orm_insert_sentinel, relationship
 
 if TYPE_CHECKING:
@@ -37,6 +37,7 @@ class CPE(CPEBase):
     os: Mapped[str]
     mgmt_ip: Mapped[str]
     sec_mgmt_ip: Mapped[str | None]
+    online_status: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # -----------
     # ORM Relationships

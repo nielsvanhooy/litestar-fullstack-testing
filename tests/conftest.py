@@ -99,6 +99,7 @@ def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
             "vendor": "cisco",
             "business_service": "VPN",
             "product_configuration": 999990,
+            "online_status": False,
         },
         {
             "device_id": "TESM1234",
@@ -109,6 +110,7 @@ def fx_raw_cpes() -> list[CPE | dict[str, Any]]:
             "vendor": "cisco",
             "business_service": "VPN",
             "product_configuration": 999999,
+            "online_status": True,
         },
     ]
 

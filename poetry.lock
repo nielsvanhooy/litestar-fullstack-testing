@@ -1333,6 +1333,31 @@ files = [
 colorama = ">=0.4"
 
 [[package]]
+name = "gufo-ping"
+version = "0.3.0"
+description = ""
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "gufo_ping-0.3.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0076e0ce8cdc62947ad22e68d2bb5d2df04dd230ed03a41713dca9bc2139888e"},
+    {file = "gufo_ping-0.3.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1671dc0ef0ea955b1a8ddfb0f07b51135ddcb93c93e2da378b47a7dc394a30cd"},
+    {file = "gufo_ping-0.3.0-cp310-cp310-manylinux_2_24_x86_64.whl", hash = "sha256:8a24619fd52ff1977474aa330b16f28d635563a11f5d7850acd415a7028447fc"},
+    {file = "gufo_ping-0.3.0-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:e0de2152b12a1aa6011a6afb47cf475f8ef3eecbabe51bf0ab31ca4b17d2d081"},
+    {file = "gufo_ping-0.3.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:dd381bbb88ca934f2d94cb99552396f552bb4108eb5a1e22320fdebbc8a796f0"},
+    {file = "gufo_ping-0.3.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b474b9eb6421c720631f8fb949e582e27ff29384f6b9d82767972b8a64bc4cd3"},
+    {file = "gufo_ping-0.3.0-cp311-cp311-manylinux_2_24_x86_64.whl", hash = "sha256:7e6b428fa05fed7b5c6a30105d9d67dd96181a34f0412f94d5c90097189f2ecb"},
+    {file = "gufo_ping-0.3.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:9868f1f08c781b8cf88888e0a2a022f332a35f233465e61780025354ca58586f"},
+    {file = "gufo_ping-0.3.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d169791905515c1ce3026ccf6919dcafc62c4cc6ac9f4242b55635879775fd93"},
+    {file = "gufo_ping-0.3.0-cp38-cp38-manylinux_2_24_x86_64.whl", hash = "sha256:b8fad26c908d212ee42445dc2d39b55f4771a86f79580e11d29a438fac69410e"},
+    {file = "gufo_ping-0.3.0-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:1671ea9fa4a77453bc05a721d7db8091119c5f6ef17223e3805ad3f66f52b4f4"},
+    {file = "gufo_ping-0.3.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:1cd85c641ec908e1a0ec28920a171239edf9c4a7e0a3d1de15d04935ad88b965"},
+    {file = "gufo_ping-0.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2fff050721103d872bbb055dde78c43a7768a7f4fe7402f9cc4bdaa70a07b5df"},
+    {file = "gufo_ping-0.3.0-cp39-cp39-manylinux_2_24_x86_64.whl", hash = "sha256:75b2a71c58232870d94e7d0f9c4b1ba40ebd47d566ffd788749e2e8a1933737c"},
+    {file = "gufo_ping-0.3.0-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:c1ac42dbc02084980c2ae4be1c0f67b9733fd8e011688dc407c8cb0750ca4d42"},
+    {file = "gufo_ping-0.3.0.tar.gz", hash = "sha256:31a6c89502cfa7d483a6f374dfcfe277571a636a20a7a97b9ff94f2ab1651219"},
+]
+
+[[package]]
 name = "h11"
 version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -4221,4 +4246,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">3.11.0,<3.12"
-content-hash = "5681f6e1e9149039ab16b692fdc52fcb4698e0d58912535e8b161f9b8e3548d5"
+content-hash = "4c334e6bc2be2a833808b78601463aa980666ca131db8e06c3408f2fda454aab"

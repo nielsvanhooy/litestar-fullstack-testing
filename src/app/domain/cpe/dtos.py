@@ -36,6 +36,7 @@ class CreateCPE:
     business_service: str
     product_configuration: int
     sec_mgmt_ip: str | None = None
+    online_status: bool = False
 
 
 class CreateCpeDTO(DataclassDTO[CreateCPE]):
@@ -62,6 +63,7 @@ class UpdateCPE:
     os: str | None = None
     mgmt_ip: str | None = None
     sec_mgmt_ip: str | None = None
+    online_status: bool | None = None
     vendor: str | None = None
     business_service: str | None = None
     product_configuration: int | None = None
