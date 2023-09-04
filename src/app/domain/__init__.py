@@ -102,7 +102,6 @@ system_tasks = [worker.tasks.system_task, worker.tasks.system_upkeep, *domain_sy
 
 background_tasks = [worker.tasks.background_worker_task, email.send_email, *domain_background_tasks]
 
-ping_tasks = [*domain_ping_tasks]
 
 cron_system_tasks = [
     worker.CronJob(function=worker.tasks.system_upkeep, unique=True, cron="0 * * * *", timeout=500),
@@ -122,13 +121,10 @@ scheduled_tasks: dict[worker.Queue, list[worker.CronJob]] = {
     worker.queues.get("system-tasks"): cron_system_tasks,  # type: ignore[dict-item]
     worker.queues.get("background-tasks"): cron_background_tasks,  # type: ignore[dict-item]
 }
-ping_task: dict[worker.Queue, list[worker.WorkerFunction]] = {
-    worker.queues.get("ping_woker"): ping_tasks, # type: ignore[dict-item]r
-}
-ping_task_scheduled: dict[worker.Queue, list[worker.CronJob]] = {
-    worker.queues.get("ping_worker"): ping_tasks, # type: ignore[dict-item]
-}
-
+# ping_task: dict[worker.Queue, list[worker.WorkerFunction]] = {
+#     worker.queues.get("ping_worker"): ping_tasks,  # type: ignore[dict-item]
+# ping_task_scheduled: dict[worker.Queue, list[worker.CronJob]] = {
+#     worker.queues.get("ping_worker"): ping_tasks,  # type: ignore[dict-item]
 
 
 signature_namespace: Mapping[str, Any] = {
