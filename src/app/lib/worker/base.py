@@ -99,6 +99,7 @@ redis = Redis.from_url(
 queues: dict[str, Queue] = {
     "background-tasks": Queue(redis, name="background-tasks"),
     "system-tasks": Queue(redis, name="system-tasks"),
+    "ping-worker": Queue(redis, name="ping-worker"),
 }
 """
 [list[Queue]][app.lib.worker.Queue] instances instantiated with a Redis config
