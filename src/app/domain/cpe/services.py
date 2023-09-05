@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from sqlalchemy import select
+
 from app.domain.cpe_business_product.dependencies import provides_cpe_business_service
 from app.domain.cpe_product_configuration.dependencies import provides_product_config_service
 from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
@@ -18,6 +20,12 @@ class CpeRepository(SQLAlchemyAsyncRepository[CPE]):
 
     model_type = CPE
     id_attribute = "device_id"
+
+    async def get_cpes_to_ping(self) -> dict[str, Any]:
+        statement = select(CPE.device_id, CPE.mgmt_ip)
+        db_data = await self._execute(statement)
+
+        return {result[1]: {"device_id": result[0], "mgmt_ip": result[1]} for result in db_data}
 
 
 class CPEService(SQLAlchemyAsyncRepositoryService[CPE]):
@@ -50,3 +58,6 @@ class CPEService(SQLAlchemyAsyncRepositoryService[CPE]):
         db_obj.product_configuration = prd_config
 
         return await super().create(db_obj)
+
+    async def get_cpes_to_ping(self) -> dict[str, Any]:
+        return await self.repository.get_cpes_to_ping()

@@ -50,3 +50,6 @@ class CPE(CPEBase):
     service: Mapped[CPEBusinessProduct] = relationship(lazy="selectin")
     product_configuration: Mapped[CPEProductConfiguration] = relationship(lazy="selectin")
     tscm_check_results: Mapped[list[TSCMCheckResult]] = relationship(lazy="noload")
+
+    def __repr__(self) -> str:
+        return f"CPE ({self.device_id})"

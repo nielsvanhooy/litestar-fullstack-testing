@@ -1,7 +1,7 @@
 import datetime
 from typing import Any
 
-from litestar.contrib.repository.filters import BeforeAfter, FilterTypes, LimitOffset
+from litestar.repository.filters import BeforeAfter, FilterTypes, LimitOffset
 from sqlalchemy import and_, select
 
 from app.domain.cpe.dependencies import provides_cpe_service

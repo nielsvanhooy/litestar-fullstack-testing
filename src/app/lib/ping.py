@@ -1,4 +1,3 @@
-import asyncio
 from collections.abc import Callable
 from typing import Any
 
@@ -34,7 +33,3 @@ async def ping(timeout: int = 1) -> bool:
     if not r:
         raise TimeoutError("Destination Unreachable")
     return True
-
-
-lala = asyncio.run(ping())
-print(lala)
