@@ -58,7 +58,7 @@ async def perform_tscm_check(
 
         email_results: list[TSCMEmailDoc] = []
 
-        online_status = True
+        online_status = True # make use of the cpe_service to get the online results
 
         time.time()
         async with create_task_group() as task_group:
