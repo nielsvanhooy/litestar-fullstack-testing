@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from sqlalchemy import select
+from sqlalchemy.orm import load_only
 
 from app.domain.cpe_business_product.dependencies import provides_cpe_business_service
 from app.domain.cpe_product_configuration.dependencies import provides_product_config_service
@@ -22,10 +23,10 @@ class CpeRepository(SQLAlchemyAsyncRepository[CPE]):
     id_attribute = "device_id"
 
     async def get_cpes_to_ping(self) -> dict[str, Any]:
-        statement = select(CPE.device_id, CPE.mgmt_ip)
-        db_data = await self._execute(statement)
+        statement = select(CPE).options(load_only(CPE.device_id, CPE.mgmt_ip))
+        db_data = await self.list(statement=statement)
 
-        return {result[1]: {"device_id": result[0], "mgmt_ip": result[1]} for result in db_data}
+        return {result.mgmt_ip: {"device_id": result.device_id, "mgmt_ip": result.mgmt_ip} for result in db_data}
 
 
 class CPEService(SQLAlchemyAsyncRepositoryService[CPE]):
