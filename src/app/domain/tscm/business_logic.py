@@ -49,16 +49,13 @@ async def perform_tscm_check(
         elasticsearch_repo = ElasticSearchRepository(test_run=test_run)
 
         cpe = await cpe_service.get(device_id)
-        vendor = cpe.vendor.name
-        service = cpe.service.name
-        device_model = cpe.product_configuration.cpe_model
 
-        tscm_checks = await tscm_service.vendor_product_checks(vendor, service, device_model, selected_check)
+        tscm_checks = await tscm_service.vendor_product_checks(
+            cpe.vendor.name, cpe.service.name, cpe.product_configuration.cpe_model, selected_check
+        )
         latest_compliancy = await tscm_check_result_service.compliant_since(device_id)
 
         email_results: list[TSCMEmailDoc] = []
-
-        online_status = True # make use of the cpe_service to get the online results
 
         time.time()
         async with create_task_group() as task_group:
@@ -73,9 +70,9 @@ async def perform_tscm_check(
                         tscm_checks,
                         provided_config,
                         device_id,
-                        online_status,
-                        vendor,
-                        service,
+                        cpe.online_status,
+                        cpe.vendor.name,
+                        cpe.service.name,
                         export_report,
                         email_results,
                         latest_compliancy,
