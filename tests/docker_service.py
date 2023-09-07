@@ -5,6 +5,7 @@ import os
 import re
 import subprocess
 import timeit
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import asyncpg
@@ -47,7 +48,7 @@ class DockerServiceRegistry:
         self.docker_ip = self._get_docker_ip()
         self._base_command = [
             "docker-compose",
-            "--file=tests/docker-compose.yml",
+            f"--file={Path(__file__).parent / 'docker-compose.yml'}",
             "--project-name=app_pytest",
         ]
 

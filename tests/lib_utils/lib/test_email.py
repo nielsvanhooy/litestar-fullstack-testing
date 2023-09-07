@@ -24,7 +24,7 @@ async def test_send_email_with_file() -> None:
     html = """<p>Hi this test mail, thanks for using litestar-mail</p> """
 
     directory = Path.cwd()
-    attachment = [f"{directory}/tests/unit/lib/txt_files/plain.txt"]
+    attachment = [f"{directory}/tests/lib_utils/lib/txt_files/plain.txt"]
     if directory.name == "lib":
         attachment = [f"{directory}/txt_files/plain.txt"]
 
