@@ -73,3 +73,7 @@ CPE_PROD_CONFIGS_DETAIL = "/api/product-configurations/{product_configuration_id
 CPE_PROD_CONFIGS_CREATE = "/api/product-configurations"
 CPE_PROD_CONFIGS_UPDATE = "/api/product-configurations/{product_configuration_id:str}"
 CPE_PROD_CONFIGS_DELETE = "/api/product-configurations/{product_configuration_id:str}"
+
+
+########## SSH Web Terminal
+SSH_WEB_TERMINAL = "/api/terminal"

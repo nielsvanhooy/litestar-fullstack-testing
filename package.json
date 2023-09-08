@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.45"
+    "vue": "^3.2.45",
+    "htmx.org": "^1.9.5",
+    "xterm": "^5.3.0"
   },
   "devDependencies": {
     "@types/node": "^18.14.0",

@@ -41,6 +41,7 @@ from . import (
     tscm,
     urls,
     web,
+    ssh_terminal,
 )
 from .domain_tasks import (
     domain_background_tasks,
@@ -71,6 +72,7 @@ routes: list[ControllerRouterHandler] = [
     cpe_vendor.controllers.CpeVendorController,
     tscm.controllers.TscmController,
     cpe_product_configuration.controllers.CpeProductConfigurationController,
+    ssh_terminal.controllers.SshWebTerminalController,
 ]
 
 if settings.worker.WEB_ENABLED:
