@@ -214,14 +214,14 @@ def _patch_redis(app: "Litestar", redis: Redis, monkeypatch: pytest.MonkeyPatch)
 
 
 @pytest.fixture(name="client")
-async def fx_client(app: Litestar, superuser_token_headers) -> AsyncIterator[AsyncClient]:
+async def fx_client(app: Litestar) -> AsyncIterator[AsyncClient]:
     """Async client that calls requests on the app.
 
     ```text
     ValueError: The future belongs to a different loop than the one specified as the loop argument
     ```
     """
-    async with AsyncClient(app=app, base_url="http://testserver", headers=superuser_token_headers) as client:
+    async with AsyncClient(app=app, base_url="http://testserver") as client:
         yield client
 
 
