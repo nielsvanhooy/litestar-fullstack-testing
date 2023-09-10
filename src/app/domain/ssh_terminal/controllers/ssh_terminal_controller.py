@@ -36,13 +36,11 @@ class SshWebTerminalController(Controller):
     tags = ["SSH Web Terminal Controller"]
     dependencies = {"cpe_service": Provide(provides_cpe_service)}
 
-
     @websocket_listener(
         path=urls.SSH_WEB_TERMINAL,
     )
     async def ssh_web_terminal(self, data: str, socket: WebSocket) -> str:
-        # """ this is "a testing method not for use now but exploring options on what i want ""
-
+        # """ this is "a testing method, not for use now. but exploring options on what i want ""
 
         async with asyncssh.connect('192.168.1.35', username="donny", password="sjaakie123", known_hosts=None, connect_timeout=10) as conn:
             output = StringIO()

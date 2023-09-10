@@ -4,6 +4,7 @@ from collections.abc import AsyncIterator, Generator
 from pathlib import Path
 from typing import Any
 
+import aiohttp
 import pytest
 from httpx import AsyncClient
 from litestar import Litestar
@@ -213,14 +214,14 @@ def _patch_redis(app: "Litestar", redis: Redis, monkeypatch: pytest.MonkeyPatch)
 
 
 @pytest.fixture(name="client")
-async def fx_client(app: Litestar) -> AsyncIterator[AsyncClient]:
+async def fx_client(app: Litestar, superuser_token_headers) -> AsyncIterator[AsyncClient]:
     """Async client that calls requests on the app.
 
     ```text
     ValueError: The future belongs to a different loop than the one specified as the loop argument
     ```
     """
-    async with AsyncClient(app=app, base_url="http://testserver") as client:
+    async with AsyncClient(app=app, base_url="http://testserver", headers=superuser_token_headers) as client:
         yield client
 
 

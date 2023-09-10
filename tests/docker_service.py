@@ -51,7 +51,7 @@ class DockerServiceRegistry:
             f"--file={Path(__file__).parent / 'docker-compose.yml'}",
             "--project-name=app_pytest",
         ]
-
+        print(self._base_command)
     def _get_docker_ip(self) -> str:
         docker_host = os.environ.get("DOCKER_HOST", "").strip()
         if not docker_host or docker_host.startswith("unix://"):
