@@ -4,7 +4,6 @@ from collections.abc import AsyncIterator, Generator
 from pathlib import Path
 from typing import Any
 
-import aiohttp
 import pytest
 from httpx import AsyncClient
 from litestar import Litestar
