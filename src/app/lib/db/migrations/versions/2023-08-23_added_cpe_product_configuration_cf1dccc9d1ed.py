@@ -55,7 +55,10 @@ def schema_upgrades():
         sa.Column("created_at", sa.DateTimeUTC(timezone=True), nullable=False),
         sa.Column("updated_at", sa.DateTimeUTC(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(
-            ["vendor_id"], ["vendor.id"], name=op.f("fk_product_configuration_vendor_id_vendor"), ondelete="CASCADE"
+            ["vendor_id"],
+            ["vendor.id"],
+            name=op.f("fk_product_configuration_vendor_id_vendor"),
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_product_configuration")),
         sa.UniqueConstraint("configuration_id", name=op.f("uq_product_configuration_configuration_id")),

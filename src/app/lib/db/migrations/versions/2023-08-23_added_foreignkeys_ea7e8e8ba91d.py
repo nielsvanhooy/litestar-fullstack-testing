@@ -62,7 +62,11 @@ def schema_upgrades():
         batch_op.add_column(sa.Column("vendor_id", sa.GUID(length=16), nullable=False))
         batch_op.add_column(sa.Column("service_id", sa.GUID(length=16), nullable=False))
         batch_op.create_foreign_key(
-            batch_op.f("fk_cpe_vendor_id_vendor"), "vendor", ["vendor_id"], ["id"], ondelete="CASCADE"
+            batch_op.f("fk_cpe_vendor_id_vendor"),
+            "vendor",
+            ["vendor_id"],
+            ["id"],
+            ondelete="CASCADE",
         )
         batch_op.create_foreign_key(
             batch_op.f("fk_cpe_service_id_business_product"),
@@ -76,7 +80,11 @@ def schema_upgrades():
         batch_op.add_column(sa.Column("vendor_id", sa.GUID(length=16), nullable=False))
         batch_op.add_column(sa.Column("service_id", sa.GUID(length=16), nullable=False))
         batch_op.create_foreign_key(
-            batch_op.f("fk_tscm_check_vendor_id_vendor"), "vendor", ["vendor_id"], ["id"], ondelete="CASCADE"
+            batch_op.f("fk_tscm_check_vendor_id_vendor"),
+            "vendor",
+            ["vendor_id"],
+            ["id"],
+            ondelete="CASCADE",
         )
         batch_op.create_foreign_key(
             batch_op.f("fk_tscm_check_service_id_business_product"),

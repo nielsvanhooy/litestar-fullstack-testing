@@ -55,7 +55,10 @@ def schema_upgrades():
         sa.Column("created_at", sa.DateTimeUTC(timezone=True), nullable=False),
         sa.Column("updated_at", sa.DateTimeUTC(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(
-            ["cpe_id"], ["cpe.device_id"], name=op.f("fk_tscm_check_result_cpe_id_cpe"), ondelete="CASCADE"
+            ["cpe_id"],
+            ["cpe.device_id"],
+            name=op.f("fk_tscm_check_result_cpe_id_cpe"),
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_tscm_check_result")),
     )

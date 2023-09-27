@@ -12,7 +12,8 @@ async def test_cpe_product_configurations_list(client: "AsyncClient", superuser_
 
 async def test_cpe_product_configuration_get(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
     response = await client.get(
-        "/api/product-configurations/76175388-5fb9-42ec-b42d-701e012ce7db", headers=superuser_token_headers
+        "/api/product-configurations/76175388-5fb9-42ec-b42d-701e012ce7db",
+        headers=superuser_token_headers,
     )
     assert response.status_code == 200
     assert response.json()["cpeModel"] == "3600"

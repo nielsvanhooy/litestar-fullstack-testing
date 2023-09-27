@@ -18,7 +18,8 @@ async def test_cpes_vendors_list(client: "AsyncClient", superuser_token_headers:
 
 async def test_cpes_vendors_get(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
     response = await client.get(
-        "/api/cpe-vendors/daa81279-1f85-41ba-a49a-a9430d99cc5c", headers=superuser_token_headers
+        "/api/cpe-vendors/daa81279-1f85-41ba-a49a-a9430d99cc5c",
+        headers=superuser_token_headers,
     )
     assert response.status_code == 200
     assert response.json()["name"] == "cisco"
@@ -63,5 +64,5 @@ async def test_cpe_vendors_uniqueness(client: "AsyncClient", superuser_token_hea
         },
         headers=superuser_token_headers,
     )
-    # todo find out how to work with duplicate db objects
+    # TODO: find out how to work with duplicate db objects
     assert response.status_code == 500

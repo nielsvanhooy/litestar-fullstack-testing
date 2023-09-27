@@ -169,7 +169,7 @@ async def _seed_db(
             await tscm_check_results_services.create(raw_tscm_check_result)
         await tscm_check_results_services.repository.session.commit()
 
-    return
+    return  # type: ignore
 
 
 @pytest.fixture(autouse=True)

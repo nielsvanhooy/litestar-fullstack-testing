@@ -37,8 +37,10 @@ async def export_to_elastic(results: dict[Any, Any], elasticsearch_repo: Elastic
 
 
 async def perform_tscm_check(
-    device_id: str, selected_check: str | None = None, test_run: bool = False
-) -> list[TSCMCheck]:
+    device_id: str,
+    selected_check: str | None = None,
+    test_run: bool = False,
+) -> list[TSCMCheck]:  # type: ignore
     db = session()
     async with db as db_session:
         cpe_service = await anext(provides_cpe_service(db_session=db_session))
@@ -51,7 +53,10 @@ async def perform_tscm_check(
         cpe = await cpe_service.get(device_id)
 
         tscm_checks = await tscm_service.vendor_product_checks(
-            cpe.vendor.name, cpe.service.name, cpe.product_configuration.cpe_model, selected_check
+            cpe.vendor.name,
+            cpe.service.name,
+            cpe.product_configuration.cpe_model,
+            selected_check,
         )
         latest_compliancy = await tscm_check_result_service.compliant_since(device_id)
 
