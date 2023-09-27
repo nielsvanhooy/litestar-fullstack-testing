@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from uuid import UUID
 
 from litestar.contrib.jwt import OAuth2Login
-from litestar.contrib.repository.filters import FilterTypes
 from litestar.dto.data_structures import DTOData
 from litestar.pagination import OffsetPagination
 from litestar.types import TypeEncodersMap
@@ -22,6 +21,7 @@ from app.domain.tags.models import Tag
 from app.domain.teams.models import Team
 from app.domain.tscm.models import TSCMCheck
 from app.lib import email, settings, worker
+from app.lib.dependencies import FilterTypes
 from app.lib.service.generic import Service
 from app.lib.worker.controllers import WorkerController
 

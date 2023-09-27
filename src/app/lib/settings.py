@@ -51,7 +51,10 @@ class ServerSettings(BaseSettings):
     """Server configurations."""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="SERVER_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="SERVER_",
+        case_sensitive=False,
     )
 
     APP_LOC: str = "app.asgi:create_app"
@@ -81,7 +84,10 @@ class AppSettings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="APP_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="APP_",
+        case_sensitive=False,
     )
 
     BUILD_NUMBER: str = ""
@@ -222,7 +228,10 @@ class OpenAPISettings(BaseSettings):
     """Configures OpenAPI for the application."""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="OPENAPI_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="OPENAPI_",
+        case_sensitive=False,
     )
 
     CONTACT_NAME: str = "Niels van Hooij"
@@ -239,7 +248,10 @@ class WorkerSettings(BaseSettings):
     """Global SAQ Job configuration."""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="WORKER_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="WORKER_",
+        case_sensitive=False,
     )
 
     JOB_TIMEOUT: int = 10
@@ -287,7 +299,10 @@ class DatabaseSettings(BaseSettings):
     """Configures the database for the application."""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="DB_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="DB_",
+        case_sensitive=False,
     )
 
     ECHO: bool = False
@@ -344,7 +359,10 @@ class EmailSettings(BaseSettings):
     """Email settings for the litestar-fastmail package"""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="WORKER_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="WORKER_",
+        case_sensitive=False,
     )
 
     MAIL_USERNAME: str = ""
@@ -362,7 +380,10 @@ class TscmSettings(BaseSettings):
     """TSCM settings for the Technical state compliancy monitoring of cpe's"""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="TSCM_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="TSCM_",
+        case_sensitive=False,
     )
 
     MINIMUM_CONFIG_AGE: int = 2
@@ -373,7 +394,10 @@ class ElasticSearchSettings(BaseSettings):
     """ElasticSearch settings for exporting purposes"""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_prefix="ELASTICSEARCH_", case_sensitive=False
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="ELASTICSEARCH_",
+        case_sensitive=False,
     )
 
     AVAILABLE: bool = False

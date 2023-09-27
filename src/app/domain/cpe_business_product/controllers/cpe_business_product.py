@@ -23,12 +23,12 @@ __all__ = ["CpeBusinessProductController"]
 
 
 if TYPE_CHECKING:
-    from litestar.contrib.repository.filters import FilterTypes
     from litestar.dto import DTOData
     from litestar.pagination import OffsetPagination
 
     from app.domain.cpe_business_product.models import CPEBusinessProduct
     from app.domain.cpe_business_product.services import CPEBusinessProductService
+    from app.lib.dependencies import FilterTypes
 
 
 logger = log.get_logger()

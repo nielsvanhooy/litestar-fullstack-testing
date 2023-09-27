@@ -1,7 +1,7 @@
 import datetime
 from typing import Any
 
-from litestar.repository.filters import BeforeAfter, FilterTypes, LimitOffset
+from advanced_alchemy.filters import BeforeAfter, LimitOffset
 from sqlalchemy import and_, select
 
 from app.domain.cpe.dependencies import provides_cpe_service
@@ -12,6 +12,7 @@ from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
 from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.tscm.models import TSCMCheck, TSCMCheckResult
 from app.lib import settings
+from app.lib.dependencies import FilterTypes
 from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
 
@@ -24,7 +25,11 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
     model_type = TSCMCheck
 
     async def vendor_product_checks(
-        self, vendor_name: str, business_product_name: str, model_name: str, selected_check: str | None
+        self,
+        vendor_name: str,
+        business_product_name: str,
+        model_name: str,
+        selected_check: str | None,
     ) -> list[TSCMCheck]:
         """Statement for TSCM Checks based on the vendor and business product for a device
         todo The statement is perhaps still basic as of aug 8 still learning sqlalchemy 2.0
@@ -40,9 +45,9 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
                             CPEVendor.name == vendor_name,
                             CPEBusinessProduct.name == business_product_name,
                             TSCMCheck.key == selected_check,
-                        )
+                        ),
                     )
-                )
+                ),
             )
 
         base_query = (
@@ -54,7 +59,7 @@ class TscmRepository(SQLAlchemyAsyncRepository[TSCMCheck]):
                     CPEVendor.name == vendor_name,
                     CPEBusinessProduct.name == business_product_name,
                     TSCMCheck.active == True,
-                )
+                ),
             )
         )
 
@@ -96,11 +101,18 @@ class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
         return await super().create(db_obj)
 
     async def vendor_product_checks(
-        self, vendor_name: str, business_product_name: str, model_name: str = "All", selected_check: str | None = None
+        self,
+        vendor_name: str,
+        business_product_name: str,
+        model_name: str = "All",
+        selected_check: str | None = None,
     ) -> list[TSCMCheck]:
         """Gets the TSCM Checks based on the vendor and business product for a device"""
         return await self.repository.vendor_product_checks(
-            vendor_name, business_product_name, model_name, selected_check
+            vendor_name,
+            business_product_name,
+            model_name,
+            selected_check,
         )
 
 
@@ -109,7 +121,7 @@ class TscmCheckResultRepository(SQLAlchemyAsyncRepository[TSCMCheckResult]):
 
     model_type = TSCMCheckResult
 
-    async def exists(self, *filters: FilterTypes, **kwargs: Any) -> bool:
+    async def exists(self, *filters: FilterTypes, **kwargs: Any) -> bool:  # type: ignore
         """Return true if the object specified by ``kwargs`` exists.
 
         Args:

@@ -31,5 +31,6 @@ async def ping(timeout: int = 1) -> bool:
     ping = Ping(timeout=timeout)
     r = await ping.ping("10.1.1.142")
     if not r:
-        raise TimeoutError("Destination Unreachable")
+        msg = "Destination Unreachable"
+        raise TimeoutError(msg)
     return True

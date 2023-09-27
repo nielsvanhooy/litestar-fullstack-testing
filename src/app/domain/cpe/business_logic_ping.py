@@ -28,7 +28,10 @@ async def ping_cpes(_: dict) -> None:
     """Ping list of addresses."""
 
     async def _ping_with_retries(
-        destinations: list[str], succeeded: dict[str, Any], failed: list[str], retry: int = 0
+        destinations: list[str],
+        succeeded: dict[str, Any],
+        failed: list[str],
+        retry: int = 0,
     ) -> dict[str, Any]:
         """This is a recursive function"""
         if retry == RETRY_LIMIT:

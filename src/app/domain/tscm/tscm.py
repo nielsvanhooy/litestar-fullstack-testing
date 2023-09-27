@@ -100,7 +100,7 @@ class TscmExportReport:
                 is_compliant=is_compliant,
                 is_online=online_status,
                 compliancy_reason=reason,
-            )
+            ),
         )
 
     def results(self) -> dict[str, TSCMEmailDoc | list | TSCMDoc | None]:
@@ -120,7 +120,7 @@ class CpeTscmCheck:
         vendor: str,
         service: str,
         report: TscmExportReport,
-    ):
+    ) -> None:
         self.device_id = device_id
         self.tscm_checks = tscm_checks
         self.provided_config = provided_config

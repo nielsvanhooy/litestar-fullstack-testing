@@ -16,12 +16,12 @@ from app.lib import log
 __all__ = ["CpeController"]
 
 if TYPE_CHECKING:
-    from litestar.contrib.repository.filters import FilterTypes
     from litestar.dto import DTOData
     from litestar.pagination import OffsetPagination
 
     from app.domain.cpe.models import CPE
     from app.domain.cpe.services import CPEService
+    from app.lib.dependencies import FilterTypes
 
 logger = log.get_logger()
 
@@ -42,7 +42,9 @@ class CpeController(Controller):
         path=urls.CPES_LIST,
     )
     async def list_cpes(
-        self, cpes_service: CPEService, filters: list[FilterTypes] = Dependency(skip_validation=True)
+        self,
+        cpes_service: CPEService,
+        filters: list[FilterTypes] = Dependency(skip_validation=True),
     ) -> OffsetPagination[CPE]:
         """List users."""
         results, total = await cpes_service.list_and_count(*filters)

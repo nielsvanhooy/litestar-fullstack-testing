@@ -18,7 +18,8 @@ async def test_cpes_business_products_list(client: "AsyncClient", superuser_toke
 
 async def test_cpes_business_products_get(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
     response = await client.get(
-        "/api/cpe-business-products/daa81279-1f85-41ba-a49a-a9430d99cc5e", headers=superuser_token_headers
+        "/api/cpe-business-products/daa81279-1f85-41ba-a49a-a9430d99cc5e",
+        headers=superuser_token_headers,
     )
     assert response.status_code == 200
     assert response.json()["name"] == "VPN"
@@ -66,5 +67,5 @@ async def test_cpe_business_products_uniqueness(client: "AsyncClient", superuser
         },
         headers=superuser_token_headers,
     )
-    # todo find out how to work with duplicate db objects
+    # TODO: find out how to work with duplicate db objects
     assert response.status_code == 500

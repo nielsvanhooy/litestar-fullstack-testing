@@ -30,5 +30,7 @@ class CPEProductConfiguration(orm.TimestampedDatabaseModel):
 
     vendor: Mapped[CPEVendor] = relationship(lazy="selectin")
     cpes: Mapped[list[CPE]] = relationship(
-        cascade="all, delete-orphan", back_populates="product_configuration", lazy="selectin"
+        cascade="all, delete-orphan",
+        back_populates="product_configuration",
+        lazy="selectin",
     )
