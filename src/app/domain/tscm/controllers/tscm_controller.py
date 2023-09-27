@@ -24,12 +24,12 @@ __all__ = ["TscmController"]
 
 
 if TYPE_CHECKING:
-    from litestar.contrib.repository.filters import FilterTypes
     from litestar.dto import DTOData
     from litestar.pagination import OffsetPagination
 
     from app.domain.tscm.models import TSCMCheck
     from app.domain.tscm.services import TscmService
+    from app.lib.dependencies import FilterTypes
 
 
 logger = log.get_logger()

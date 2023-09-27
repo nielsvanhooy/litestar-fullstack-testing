@@ -23,12 +23,12 @@ __all__ = ["CpeProductConfigurationController"]
 
 
 if TYPE_CHECKING:
-    from litestar.contrib.repository.filters import FilterTypes
     from litestar.dto import DTOData
     from litestar.pagination import OffsetPagination
 
     from app.domain.cpe_product_configuration.models import CPEProductConfiguration
     from app.domain.cpe_product_configuration.services import CPEProductConfigurationService
+    from app.lib.dependencies import FilterTypes
 
 
 logger = log.get_logger()
@@ -69,7 +69,8 @@ class CpeProductConfigurationController(Controller):
         self,
         cpes_product_config_service: CPEProductConfigurationService,
         product_configuration_id: str = Parameter(
-            title="product configuration id", description="The product configuration to retrieve"
+            title="product configuration id",
+            description="The product configuration to retrieve",
         ),
     ) -> CPEProductConfiguration:
         """Get a Product Configuration"""
@@ -107,7 +108,8 @@ class CpeProductConfigurationController(Controller):
         data: DTOData[UpdateCPEProductConfiguration],
         cpes_product_config_service: CPEProductConfigurationService,
         product_configuration_id: str = Parameter(
-            title="product configuration id", description="The product configuration to Update"
+            title="product configuration id",
+            description="The product configuration to Update",
         ),
     ) -> CPEProductConfiguration:
         """Update a CPE Product Configuration"""
@@ -128,7 +130,8 @@ class CpeProductConfigurationController(Controller):
         self,
         cpes_product_config_service: CPEProductConfigurationService,
         product_configuration_id: str = Parameter(
-            title="product configuration id", description="The product configuration to Delete"
+            title="product configuration id",
+            description="The product configuration to Delete",
         ),
     ) -> None:
         """Delete a cpe from the system."""
