@@ -39,12 +39,12 @@ from . import (
     urls,
     web,
 )
-
-# from .domain_tasks import (
-#     domain_background_tasks,
-#     domain_cron_background_tasks,
-#     domain_cron_system_tasks,
-#     domain_system_tasks,
+from .domain_tasks import (
+    domain_background_tasks,
+    domain_cron_background_tasks,
+    domain_cron_system_tasks,
+    domain_system_tasks,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping

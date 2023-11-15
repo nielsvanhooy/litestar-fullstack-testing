@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Any
 from anyio import Path, create_task_group
 
 from app.domain.cpe.dependencies import provides_cpe_service
-from app.domain.plugins import saq
 from app.domain.tscm.dependencies import provides_tscm_check_results_service, provides_tscm_service
 from app.domain.tscm.tscm import CpeTscmCheck, TSCMEmailDoc, TscmExportReport
 from app.lib import log
@@ -42,6 +41,10 @@ async def perform_tscm_check(
     selected_check: str | None = None,
     test_run: bool = False,
 ) -> list[TSCMCheck]:  # type: ignore
+    from app.domain.plugins import saq
+
+    queue = saq.get_queue("background-tasks")
+
     db = session()
     async with db as db_session:
         cpe_service = await anext(provides_cpe_service(db_session=db_session))
@@ -87,7 +90,7 @@ async def perform_tscm_check(
         tscm_export_results = export_report.results()
         await export_to_elastic(tscm_export_results, elasticsearch_repo)
 
-        await saq.queue_instances["background-tasks"].enqueue(
+        await queue.enqueue(
             "send_email",
             subject="test",
             to=["test@test.nl", "sjaakie@sjaakie.nl"],

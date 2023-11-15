@@ -1,11 +1,12 @@
 from litestar_aiosql import AiosqlConfig, AiosqlPlugin
-from litestar_saq import CronJob, QueueConfig, SAQConfig, SAQPlugin
+from litestar_saq import QueueConfig, SAQConfig, SAQPlugin
 from litestar_vite import ViteConfig, VitePlugin
 
-from app.domain.system import tasks
+from app.domain.domain_tasks import background_tasks, cron_background_tasks, cron_system_tasks, system_tasks
 from app.lib import settings
 
 aiosql = AiosqlPlugin(config=AiosqlConfig())
+
 vite = VitePlugin(
     config=ViteConfig(
         static_dir=settings.STATIC_DIR,
@@ -24,15 +25,13 @@ saq = SAQPlugin(
         queue_configs=[
             QueueConfig(
                 name="system-tasks",
-                tasks=[tasks.system_task, tasks.system_upkeep],
-                scheduled_tasks=[CronJob(function=tasks.system_upkeep, unique=True, cron="0 * * * *", timeout=500)],
+                tasks=system_tasks,
+                scheduled_tasks=cron_system_tasks,
             ),
             QueueConfig(
                 name="background-tasks",
-                tasks=[tasks.background_worker_task],
-                scheduled_tasks=[
-                    CronJob(function=tasks.background_worker_task, unique=True, cron="* * * * *", timeout=300),
-                ],
+                tasks=background_tasks,
+                scheduled_tasks=cron_background_tasks,
             ),
         ],
     ),
