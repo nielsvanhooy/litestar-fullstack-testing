@@ -1,6 +1,6 @@
 from phantom_communicator.communicators.base import Communicator
 
-from app.lib import worker
+from app.domain.plugins import saq
 
 __all__ = ["communicate_with_cpe", "readout_cpe"]
 
@@ -28,14 +28,14 @@ async def communicate_with_cpe(ctx: str, *, ip: str, os: str):  # type: ignore  
 
 
 async def readout_cpe(ip: str, os: str):  # type: ignore
-    await worker.queues["background-tasks"].enqueue(
+    await saq.queue_instances["background-tasks"].enqueue(
         "communicate_with_cpe",
         ip=ip,
         os=os,
         timeout=60,
     )
 
-    await worker.queues["background-tasks"].enqueue(
+    await saq.queue_instances["background-tasks"].enqueue(
         "send_email",
         subject="test",
         to=["test@test.nl", "sjaakie@sjaakie.nl"],

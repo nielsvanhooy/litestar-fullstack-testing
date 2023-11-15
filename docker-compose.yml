@@ -75,7 +75,7 @@ services:
 
   worker:
     image: app:latest
-    command: litestar worker run
+    command: litestar workers run
     restart: always
     depends_on:
       db:

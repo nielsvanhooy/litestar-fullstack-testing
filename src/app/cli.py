@@ -10,6 +10,7 @@ import click
 from anyio import open_process
 from anyio.streams.text import TextReceiveStream
 from click import echo
+from litestar import Litestar
 from pydantic import BaseModel, EmailStr
 from rich import get_console
 from rich.prompt import Confirm
@@ -18,7 +19,7 @@ from app.domain import plugins
 from app.domain.accounts.dtos import UserCreate, UserUpdate
 from app.domain.accounts.services import UserService
 from app.domain.tscm.services import TscmService
-from app.lib import db, log, settings, worker
+from app.lib import db, log, settings
 
 __all__ = [
     "create_database",
@@ -29,11 +30,9 @@ __all__ = [
     "reset_database",
     "run_all_app",
     "run_app",
-    "run_worker",
     "show_database_revision",
     "upgrade_database",
     "user_management_app",
-    "worker_management_app",
 ]
 
 
@@ -58,12 +57,6 @@ def database_management_app(_: dict[str, Any]) -> None:
 @click.group(name="users", invoke_without_command=False, help="Manage application users.")
 @click.pass_context
 def user_management_app(_: dict[str, Any]) -> None:
-    """Manage application users."""
-
-
-@click.group(name="worker", invoke_without_command=False, help="Manage application background workers.")
-@click.pass_context
-def worker_management_app(_: dict[str, Any]) -> None:
     """Manage application users."""
 
 
@@ -109,6 +102,7 @@ def worker_management_app(_: dict[str, Any]) -> None:
 @click.option("-v", "--verbose", help="Enable verbose logging.", is_flag=True, default=False, type=bool)
 @click.option("-d", "--debug", help="Enable debugging.", is_flag=True, default=False, type=bool)
 def run_all_app(
+    app: Litestar,
     host: str,
     port: int | None,
     http_workers: int | None,
@@ -118,6 +112,8 @@ def run_all_app(
     debug: bool | None,
 ) -> None:
     """Run the API server."""
+    from litestar_saq.cli import get_saq_plugin, run_worker_process
+
     log.config.configure()
     settings.server.HOST = host or settings.server.HOST
     settings.server.PORT = port or settings.server.PORT
@@ -127,10 +123,14 @@ def run_all_app(
     settings.app.DEBUG = debug or settings.app.DEBUG
     settings.log.LEVEL = 10 if verbose or settings.app.DEBUG else settings.log.LEVEL
     logger.info("starting all application services.")
+    saq_plugin = get_saq_plugin(app)
 
     try:
         logger.info("starting Background worker processes.")
-        worker_process = multiprocessing.Process(target=worker.run_worker)
+        worker_process = multiprocessing.Process(
+            target=run_worker_process,
+            args=(saq_plugin.get_workers(), app.logging_config),
+        )
         worker_process.start()
 
         if settings.app.DEV_MODE:
@@ -161,31 +161,6 @@ def run_all_app(
             process.terminate()
         logger.info("⏏️  Shutdown complete")
         sys.exit()
-
-
-@worker_management_app.command(name="run", help="Starts the background workers.")
-@click.option(
-    "--worker-concurrency",
-    help="The number of simultaneous jobs a worker process can execute.",
-    type=click.IntRange(min=1),
-    default=settings.worker.CONCURRENCY,
-    required=False,
-    show_default=True,
-)
-@click.option("-v", "--verbose", help="Enable verbose logging.", is_flag=True, default=False, type=bool)
-@click.option("-d", "--debug", help="Enable debugging.", is_flag=True, default=False, type=bool)
-def run_worker(
-    worker_concurrency: int | None,
-    verbose: bool | None,
-    debug: bool | None,
-) -> None:
-    """Run the API server."""
-    log.config.configure()
-    settings.worker.CONCURRENCY = worker_concurrency or settings.worker.CONCURRENCY
-    settings.app.DEBUG = debug or settings.app.DEBUG
-    settings.log.LEVEL = 10 if verbose or settings.app.DEBUG else settings.log.LEVEL
-    logger.info("starting Background worker processes.")
-    worker.run_worker()
 
 
 @user_management_app.command(name="create-user", help="Create a user")

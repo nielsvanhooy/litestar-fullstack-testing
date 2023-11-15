@@ -4,7 +4,8 @@ from typing import Any
 from gufo.ping import Ping
 
 from app.domain.cpe.dependencies import provides_cpe_service
-from app.lib import log, worker
+from app.domain.plugins import saq
+from app.lib import log
 from app.lib.db.base import session
 
 __all__ = ["ping_cpes", "_ping"]
@@ -46,8 +47,8 @@ async def ping_cpes(_: dict) -> None:
             return succeeded | converted_failed
 
         worker_ping_list = [destinations[n::n_workers] for n in range(n_workers)]
-        async with worker.queues["background-tasks"].batch():
-            results = await worker.queues["background-tasks"].map(
+        async with saq.queue_instances["background-tasks"].batch():
+            results = await saq.queue_instances["background-tasks"].map(
                 _ping.__name__,
                 [{"destinations": ping_list, "ping_timeout": retry + 1} for ping_list in worker_ping_list],
             )
