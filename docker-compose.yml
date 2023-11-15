@@ -27,7 +27,7 @@ services:
       - test_network
 
   db:
-    image: postgres:latest
+    image: postgres:15
     ports:
       - "15432:5432"
     hostname: db
@@ -90,7 +90,7 @@ services:
   migrator:
     image: app:latest
     restart: "no"
-    command: litestar database upgrade-database
+    command: litestar database upgrade --no-prompt
     env_file:
       - .env.example
     depends_on:
