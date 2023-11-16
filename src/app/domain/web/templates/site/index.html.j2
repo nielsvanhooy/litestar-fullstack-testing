@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html class="h-full">
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <!--IE compatibility-->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-    />
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../../resources/assets/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
   </head>
-
-  <body class="font-sans leading-none text-gray-700 antialiased">
-    <div id="app"></div>
-    {{ vite_hmr_client() }}
-    {{ vite_asset('index.html') }}
+  <body>
+    <div id="root"></div>
+        {{ vite_hmr_client() }}
+        {{ vite_asset('main.jsx') }}
   </body>
 </html>
