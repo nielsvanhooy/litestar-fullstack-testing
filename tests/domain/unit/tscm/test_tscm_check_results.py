@@ -1,9 +1,10 @@
 import pytest
+
 from app.domain.tscm.dependencies import provides_tscm_check_results_service
 from app.lib.db.base import session
 
-
 pytestmark = pytest.mark.anyio
+
 
 async def test_tscm_check_results_date_compliancy() -> None:
     db = session()

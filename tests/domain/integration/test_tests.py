@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, cast
 
-
 import pytest
 from httpx import AsyncClient
 from litestar import get

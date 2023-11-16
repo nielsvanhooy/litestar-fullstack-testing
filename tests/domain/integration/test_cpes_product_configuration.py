@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 pytestmark = pytest.mark.anyio
 
 
-
 async def test_cpe_product_configurations_list(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
     response = await client.get("/api/product-configurations", headers=superuser_token_headers)
     assert response.status_code == 200

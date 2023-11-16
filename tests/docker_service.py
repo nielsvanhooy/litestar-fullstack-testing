@@ -5,7 +5,6 @@ import os
 import re
 import subprocess
 import timeit
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import asyncpg
@@ -68,6 +67,7 @@ class DockerServiceRegistry:
         #     f"--file={Path(__file__).parent / 'docker-compose.yml'}",
         #     "--project-name=app_pytest",
         # ]
+
     def _get_docker_ip(self) -> str:
         docker_host = os.environ.get("DOCKER_HOST", "").strip()
         if not docker_host or docker_host.startswith("unix://"):

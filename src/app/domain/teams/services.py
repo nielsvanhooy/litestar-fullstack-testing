@@ -11,7 +11,6 @@ from app.lib.dependencies import FilterTypes
 from app.lib.repository import SQLAlchemyAsyncRepository, SQLAlchemyAsyncSlugRepository
 from app.lib.service import SQLAlchemyAsyncRepositoryService
 
-
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 

@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 import pytest
+
 from app.domain.tscm.dependencies import provides_tscm_service
 from app.lib.db.base import session
 

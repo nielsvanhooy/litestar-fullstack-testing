@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 pytestmark = pytest.mark.anyio
 
 
-
 async def test_teams_with_no_auth(client: "AsyncClient") -> None:
     response = await client.patch("/api/teams/97108ac1-ffcb-411d-8b1e-d9183399f63b", json={"name": "TEST UPDATE"})
     assert response.status_code == 401

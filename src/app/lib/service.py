@@ -69,6 +69,7 @@ class SQLAlchemyAsyncRepositoryService(_SQLAlchemyAsyncRepositoryService[ModelT]
             data: The return from one of the service calls.
             total: the total number of rows in the data
             *filters: Collection route filters.
+
         Returns:
             The list of instances retrieved from the repository.
         """
@@ -106,11 +107,13 @@ class SQLAlchemyAsyncRepositoryService(_SQLAlchemyAsyncRepositoryService[ModelT]
         *filters: FilterTypes,
     ) -> ModelDTOT | OffsetPagination[ModelDTOT]:
         """Convert the object to a response schema.
+
         Args:
             dto: Collection route filters.
             data: The return from one of the service calls.
             total: the total number of rows in the data
             *filters: Collection route filters.
+
         Returns:
             The list of instances retrieved from the repository.
         """

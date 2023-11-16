@@ -1,4 +1,5 @@
 import pytest
+
 from app.domain.cpe.dependencies import provides_cpe_service
 from app.lib.db.base import session
 

@@ -5,7 +5,6 @@ import random
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
-
 import pytest
 from advanced_alchemy.extensions.litestar.plugins.init.config.asyncio import autocommit_before_send_handler
 from advanced_alchemy.extensions.litestar.plugins.init.config.common import SESSION_SCOPE_KEY
