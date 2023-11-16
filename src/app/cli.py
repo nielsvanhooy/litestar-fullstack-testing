@@ -33,7 +33,6 @@ __all__ = [
     "show_database_revision",
     "upgrade_database",
     "user_management_app",
-    "worker_management_app",
 ]
 
 

@@ -25,7 +25,7 @@ async def communicate_with_cpe(ctx: str, *, ip: str, os: str):  # type: ignore  
         )
 
 
-async def readout_cpe(ip: str, os: str):  # type: ignore
+async def readout_cpe(ip: str, os: str):  # noqa: ANN201
     from app.domain.plugins import saq
 
     queue = saq.get_queue("background-tasks")

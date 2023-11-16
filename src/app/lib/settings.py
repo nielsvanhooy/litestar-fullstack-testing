@@ -118,7 +118,7 @@ class AppSettings(BaseSettings):
     CSRF_COOKIE_SECURE: bool = False
     """Default URL where static assets are located."""
     STATIC_DIR: Path = STATIC_DIR
-    DEV_MODE: bool = False
+    DEV_MODE: bool = True
 
     @property
     def slug(self) -> str:
