@@ -1,5 +1,4 @@
 """Service object implementation for SQLAlchemy.
-
 RepositoryService object is generic on the domain model type which
 should be a SQLAlchemy model.
 """

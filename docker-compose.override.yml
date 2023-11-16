@@ -4,6 +4,7 @@ x-development-volumes: &development-volumes
     - ./docs:/workspace/app/docs/
     - ./tests:/workspace/app/tests/
     - ./src:/workspace/app/src/
+    - ./ssh_files:/workspace/app/ssh_files/
     - ./Makefile:/workspace/app/Makefile
     - ./pyproject.toml:/workspace/app/pyproject.toml
     - ./pdm.lock:/workspace/app/pdm.lock
@@ -11,20 +12,28 @@ x-development-volumes: &development-volumes
     - ./tsconfig.json:/workspace/app/tsconfig.json
     - ./package.json:/workspace/app/package.json
     - ./vite.config.ts:/workspace/app/vite.config.ts
+    - /home/donnyio/git/configstore/kpnvpn:/workspace/app/configstore
 services:
   localmail:
     image: mailhog/mailhog:v1.0.0
     container_name: localmail
     ports:
       - "8025:8025"
+      - "1025:1025"
+    networks:
+      - test_network
+
   app:
     build:
       context: .
       dockerfile: deploy/docker/dev/Dockerfile
     image: app:latest-dev
-    command: litestar run --reload --host 0.0.0.0 --port 8000
+    command: litestar run --reload
     restart: always
+    networks:
+      - test_network
     <<: *development-volumes
+
   worker:
     image: app:latest-dev
     command: litestar workers run
@@ -37,6 +46,9 @@ services:
         condition: service_healthy
     env_file:
       - .env.example
+    networks:
+      - test_network
+
   migrator:
     image: app:latest-dev
     command: litestar database upgrade --no-prompt
@@ -49,3 +61,24 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+    networks:
+      - test_network
+
+  docs:
+    command: mkdocs serve
+    image: app:latest-dev
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.example
+    volumes:
+      - ./mkdocs.yml:/workspace/app/mkdocs.yml
+      - ./docs:/workspace/app/docs
+    networks:
+      - test_network

@@ -53,6 +53,7 @@ class DockerServiceRegistry:
             self._use_legacy_compose = True
         self._running_services: set[str] = set()
         self.docker_ip = self._get_docker_ip()
+
         self._base_command = ["docker-compose"] if self._use_legacy_compose else ["docker", "compose"]
         self._base_command.extend(
             [
@@ -60,6 +61,12 @@ class DockerServiceRegistry:
                 "--project-name=app_pytest",
             ],
         )
+        # keeping below i had an issue that dissapeared and below fixed that earlier.
+        # self._base_command = [
+        #     "docker-compose",
+        #     f"--file={Path(__file__).parent / 'docker-compose.yml'}",
+        #     "--project-name=app_pytest",
+        # ]
 
     def _get_docker_ip(self) -> str:
         docker_host = os.environ.get("DOCKER_HOST", "").strip()

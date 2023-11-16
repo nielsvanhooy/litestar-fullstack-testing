@@ -19,12 +19,12 @@ __all__ = ["AccountController"]
 if TYPE_CHECKING:
     from uuid import UUID
 
-    from advanced_alchemy.filters import FilterTypes
     from litestar.dto import DTOData
     from litestar.pagination import OffsetPagination
 
     from app.domain.accounts.models import User
     from app.domain.accounts.services import UserService
+    from app.lib.dependencies import FilterTypes
 
 
 logger = log.get_logger()

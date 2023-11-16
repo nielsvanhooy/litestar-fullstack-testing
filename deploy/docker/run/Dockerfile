@@ -13,7 +13,8 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
     PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
     LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8
+    LC_ALL=C.UTF-8 \
+    APPLICATION_RUN_TYPE=production
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends git tini \
@@ -76,7 +77,8 @@ RUN pip install --quiet --disable-pip-version-check --no-deps --requirement=/tmp
 RUN pip install --quiet --disable-pip-version-check --no-deps /tmp/*.whl
 USER nonroot
 STOPSIGNAL SIGINT
-EXPOSE 8000
+EXPOSE 8000/tcp
+EXPOSE 8080/tcp
 ENTRYPOINT ["tini","--" ]
-CMD [ "litestar","run","--host","0.0.0.0"]
+CMD [ "litestar","run"]
 VOLUME /workspace/app

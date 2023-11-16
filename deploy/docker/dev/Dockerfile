@@ -13,10 +13,11 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
     PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
     LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8
+    LC_ALL=C.UTF-8 \
+    APPLICATION_RUN_TYPE=development
 RUN apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends git tini \
+    && apt-get install -y --no-install-recommends git tini openssh-server \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /root/.cache \
@@ -77,9 +78,15 @@ WORKDIR /workspace/app
 COPY docs/ docs/
 COPY tests/ tests/
 COPY src src/
+COPY ssh_files/ ssh_files/
+#
+RUN chmod 400 /workspace/app/ssh_files/.ssh/id_rsa_gitlab \
+  && chmod +x /workspace/app/ssh_files/create_development_ssh_tunnel.sh \
+  && /workspace/app/ssh_files/create_development_ssh_tunnel.sh
+
 RUN pdm install $PDM_INSTALL_ARGS
 STOPSIGNAL SIGINT
-EXPOSE 8000
+EXPOSE 8000/tcp
 ENTRYPOINT ["tini","--" ]
-CMD [ "litestar","run","--host","0.0.0.0"]
+CMD [ "litestar","run"]
 VOLUME /workspace/app

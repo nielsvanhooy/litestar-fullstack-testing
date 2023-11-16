@@ -169,6 +169,7 @@ tsconfig.tsbuildinfo
 tmp/
 temp/
 
-
 # built files from the web UI
 src/app/domain/web/public
+/ssh_files/
+/fixtures/

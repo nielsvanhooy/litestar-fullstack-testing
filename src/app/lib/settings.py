@@ -7,8 +7,9 @@ from pathlib import Path
 from typing import Any, Final, Literal
 
 from dotenv import load_dotenv
+from elasticsearch import AsyncElasticsearch
 from litestar.data_extractors import RequestExtractorField, ResponseExtractorField  # noqa: TCH002
-from pydantic import ValidationError, field_validator
+from pydantic import DirectoryPath, EmailStr, ValidationError, conint, field_validator
 from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
@@ -24,6 +25,8 @@ __all__ = [
     "LogSettings",
     "WorkerSettings",
     "ServerSettings",
+    "EmailSettings",
+    "TscmSettings",
     "app",
     "db",
     "openapi",
@@ -31,6 +34,10 @@ __all__ = [
     "server",
     "log",
     "worker",
+    "email",
+    "tscm",
+    "elasticsearch",
+    "elasticsearch_session",
 ]
 
 DEFAULT_MODULE_NAME = "app"
@@ -204,7 +211,7 @@ class LogSettings(BaseSettings):
     logged."""
     WORKER_EVENT: str = "Worker"
     """Log event name for logs from SAQ worker."""
-    SAQ_LEVEL: int = 20
+    SAQ_LEVEL: int = 20  # was 50
     """Level to log SAQ logs."""
     SQLALCHEMY_LEVEL: int = 30
     """Level to log SQLAlchemy logs."""
@@ -225,11 +232,11 @@ class OpenAPISettings(BaseSettings):
         case_sensitive=False,
     )
 
-    CONTACT_NAME: str = "Cody"
+    CONTACT_NAME: str = "Niels van Hooij"
     """Name of contact on document."""
-    CONTACT_EMAIL: str = "admin"
+    CONTACT_EMAIL: str = "later@later.nl"
     """Email for contact on document."""
-    TITLE: str | None = "Litestar Fullstack"
+    TITLE: str | None = "Phantom NMS"
     """Document title."""
     VERSION: str = f"v{version}"
     """Document version."""
@@ -252,7 +259,6 @@ class WorkerSettings(BaseSettings):
     """
     WEB_ENABLED: bool = True
     """If true, the worker admin UI is launched on worker startup.."""
-    """Initialization method for the worker process."""
 
 
 class DatabaseSettings(BaseSettings):
@@ -315,6 +321,58 @@ class RedisSettings(BaseSettings):
     """Length of time to wait (in seconds) between keepalive commands."""
 
 
+class EmailSettings(BaseSettings):
+    """Email settings for the litestar-fastmail package"""
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="WORKER_",
+        case_sensitive=False,
+    )
+
+    MAIL_USERNAME: str = ""
+    MAIL_PASSWORD: str = ""
+    MAIL_PORT: int = 1025
+    MAIL_SERVER: str = "localmail"
+    MAIL_STARTTLS: bool = False
+    MAIL_SSL_TLS: bool = False
+    MAIL_FROM: EmailStr = "test@email.com"
+    TEMPLATE_FOLDER: DirectoryPath | None = Path(__file__).parent / "templates"
+    SUPPRESS_SEND: conint(gt=-1, lt=2) = 0  # type: ignore
+
+
+class TscmSettings(BaseSettings):
+    """TSCM settings for the Technical state compliancy monitoring of cpe's"""
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="TSCM_",
+        case_sensitive=False,
+    )
+
+    MINIMUM_CONFIG_AGE: int = 2
+    MAXIMUM_CONFIG_AGE: int = 29
+
+
+class ElasticSearchSettings(BaseSettings):
+    """ElasticSearch settings for exporting purposes"""
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_prefix="ELASTICSEARCH_",
+        case_sensitive=False,
+    )
+
+    AVAILABLE: bool = False
+    HOST: str | None = None
+    PORT: int = 9200
+    USERNAME: str = "elastic"
+    PASSWORD: str = "changeme"
+
+
 @lru_cache
 def load_settings() -> (
     tuple[
@@ -325,6 +383,10 @@ def load_settings() -> (
         ServerSettings,
         LogSettings,
         WorkerSettings,
+        EmailSettings,
+        TscmSettings,
+        ElasticSearchSettings,
+        AsyncElasticsearch,
     ]
 ):
     """Load Settings file.
@@ -372,18 +434,21 @@ def load_settings() -> (
         log: LogSettings = LogSettings()
         worker: WorkerSettings = WorkerSettings()
 
+        EmailSettings.model_rebuild()
+        email: EmailSettings = EmailSettings()
+        tscm: TscmSettings = TscmSettings()
+        elasticsearch: ElasticSearchSettings = ElasticSearchSettings()
+
+        elasticsearch_session: AsyncElasticsearch = AsyncElasticsearch(
+            f"http://{elasticsearch.HOST}:{elasticsearch.PORT}",
+            basic_auth=(elasticsearch.USERNAME, elasticsearch.PASSWORD),
+            verify_certs=False,
+        )
+
     except ValidationError as e:
         print("Could not load settings.", e)  # noqa: T201
         raise
-    return (
-        app,
-        redis,
-        db,
-        openapi,
-        server,
-        log,
-        worker,
-    )
+    return (app, redis, db, openapi, server, log, worker, email, tscm, elasticsearch, elasticsearch_session)
 
 
 (
@@ -394,4 +459,8 @@ def load_settings() -> (
     server,
     log,
     worker,
+    email,
+    tscm,
+    elasticsearch,
+    elasticsearch_session,
 ) = load_settings()

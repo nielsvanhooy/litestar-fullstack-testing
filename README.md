@@ -242,6 +242,12 @@ Most of the development related tasks are included in the `Makefile`. To install
 make install
 ```
 
+note the output above. if you get:
+/bin/sh: 5: source: not found
+replace "source .venv/bin/activate" with ". .venv/bin/activate" on line 47
+
+---
+
 This command does the following:
 
 - install `pdm` if it is not available in the path.
@@ -253,7 +259,7 @@ This command does the following:
 There is a sample `.env` file located in the root of the repository.
 
 ```bash
-cp .env.example .env
+cp env.example .env
 ```
 
 **Note** `SECRET_KEY`, `DATABASE_URI`, and `REDIS_URL` are the most important config settings. Be sure to set this properly.
