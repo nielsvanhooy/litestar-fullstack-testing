@@ -1,26 +1,39 @@
+import json
 import multiprocessing
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 import anyio
 import click
 from anyio import open_process
 from anyio.streams.text import TextReceiveStream
+from click import echo
 from litestar import Litestar
-from pydantic import EmailStr
+from pydantic import BaseModel, EmailStr
 from rich import get_console
+from rich.prompt import Confirm
 
 from app.domain import plugins
 from app.domain.accounts.dtos import UserCreate, UserUpdate
 from app.domain.accounts.services import UserService
-from app.lib import log, settings
+from app.domain.tscm.services import TscmService
+from app.lib import db, log, settings
 
 __all__ = [
+    "create_database",
     "create_user",
+    "database_management_app",
+    "promote_to_superuser",
+    "purge_database",
+    "reset_database",
     "run_all_app",
     "run_app",
+    "show_database_revision",
+    "upgrade_database",
     "user_management_app",
+    "worker_management_app",
 ]
 
 
@@ -34,6 +47,12 @@ logger = log.get_logger()
 @click.pass_context
 def run_app(_: dict[str, Any]) -> None:
     """Launch Application Components."""
+
+
+@click.group(name="database-litestar", invoke_without_command=False, help="Manage the configured database backend.")
+@click.pass_context
+def database_management_app(_: dict[str, Any]) -> None:
+    """Manage the configured database backend."""
 
 
 @click.group(name="users", invoke_without_command=False, help="Manage application users.")
@@ -190,8 +209,13 @@ def create_user(
         password: str,
         superuser: bool = False,
     ) -> None:
+        class Email(BaseModel):
+            email: EmailStr
+
+        validate_email = Email(email=email)
+
         obj_in = UserCreate(
-            email=EmailStr(email),
+            email=validate_email.email,
             name=name,
             password=password,
             is_superuser=superuser,
@@ -244,6 +268,102 @@ def promote_to_superuser(email: str) -> None:
                 logger.warning("User not found: %s", email)
 
     anyio.run(_promote_to_superuser, email)
+
+
+@database_management_app.command(
+    name="create-database",
+    help="Creates an empty postgres database and executes migrations",
+)
+def create_database() -> None:
+    """Create database DDL migrations."""
+    db.utils.create_database()
+
+
+@database_management_app.command(
+    name="upgrade-database",
+    help="Executes migrations to apply any outstanding database structures.",
+)
+def upgrade_database() -> None:
+    """Upgrade the database to the latest revision."""
+    db.utils.upgrade_database()
+
+
+@database_management_app.command(
+    name="reset-database",
+    help="Executes migrations to apply any outstanding database structures.",
+)
+@click.option(
+    "--no-prompt",
+    help="Do not prompt for confirmation.",
+    type=click.BOOL,
+    default=False,
+    required=False,
+    show_default=True,
+    is_flag=True,
+)
+def reset_database(no_prompt: bool) -> None:
+    """Reset the database to an initial empty state."""
+    if not no_prompt:
+        Confirm.ask("Are you sure you want to drop and recreate everything?")
+    db.utils.reset_database()
+
+
+@database_management_app.command(
+    name="purge-database",
+    help="Drops all tables.",
+)
+@click.option(
+    "--no-prompt",
+    help="Do not prompt for confirmation.",
+    type=click.BOOL,
+    default=False,
+    required=False,
+    show_default=True,
+    is_flag=True,
+)
+def purge_database(no_prompt: bool) -> None:
+    """Drop all objects in the database."""
+    if not no_prompt:
+        confirmed = Confirm.ask(
+            "Are you sure you want to drop everything?",
+        )
+        if not confirmed:
+            echo("Aborting database purge and exiting.")
+            sys.exit(0)
+    db.utils.purge_database()
+
+
+@database_management_app.command(
+    name="show-current-database-revision",
+    help="Shows the current revision for the database.",
+)
+def show_database_revision() -> None:
+    """Show current database revision."""
+    db.utils.show_database_revision()
+
+
+@database_management_app.command(
+    name="load-fixtures",
+    help="load fixtures defined trough path parameter (from the project dir)",
+)
+@click.option(
+    "--path",
+    help="path of the fixture",
+    type=click.STRING,
+    required=True,
+    show_default=False,
+)
+def load_fixtues(path: str) -> None:
+    async def _load_fixtures(path: str) -> None:
+        file_path = Path.cwd() / path
+        with Path.open(file_path) as f:
+            data = json.load(f)
+
+        async with TscmService.new() as tscm_service:
+            await tscm_service.create(data=data)
+            await tscm_service.repository.session.commit()
+
+    anyio.run(_load_fixtures, path)
 
 
 def _convert_uvicorn_args(args: dict[str, Any]) -> list[str]:

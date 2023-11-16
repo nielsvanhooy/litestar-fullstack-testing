@@ -1,8 +1,9 @@
 from litestar.contrib.pydantic import PydanticPlugin
 from litestar_aiosql import AiosqlConfig, AiosqlPlugin
-from litestar_saq import CronJob, QueueConfig, SAQConfig, SAQPlugin
+from litestar_saq import QueueConfig, SAQConfig, SAQPlugin
 from litestar_vite import ViteConfig, VitePlugin
 
+from app.domain.domain_tasks import background_tasks, cron_background_tasks, cron_system_tasks, system_tasks
 from app.lib import settings
 
 pydantic = PydanticPlugin(prefer_alias=True)
@@ -15,6 +16,8 @@ vite = VitePlugin(
         port=3005,
     ),
 )
+
+
 saq = SAQPlugin(
     config=SAQConfig(
         redis_url=settings.redis.URL,
@@ -23,27 +26,13 @@ saq = SAQPlugin(
         queue_configs=[
             QueueConfig(
                 name="system-tasks",
-                tasks=["app.domain.system.tasks.system_task", "app.domain.system.tasks.system_upkeep"],
-                scheduled_tasks=[
-                    CronJob(
-                        function="app.domain.system.tasks.system_upkeep",
-                        unique=True,
-                        cron="0 * * * *",
-                        timeout=500,
-                    ),
-                ],
+                tasks=system_tasks,
+                scheduled_tasks=cron_system_tasks,
             ),
             QueueConfig(
                 name="background-tasks",
-                tasks=["app.domain.system.tasks.background_worker_task"],
-                scheduled_tasks=[
-                    CronJob(
-                        function="app.domain.system.tasks.background_worker_task",
-                        unique=True,
-                        cron="* * * * *",
-                        timeout=300,
-                    ),
-                ],
+                tasks=background_tasks,
+                scheduled_tasks=cron_background_tasks,
             ),
         ],
     ),

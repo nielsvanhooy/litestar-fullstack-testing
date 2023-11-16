@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
+import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 function getBackendUrl(path: string) {
@@ -33,7 +33,7 @@ export default defineConfig({
     },
   },
 
-  plugins: [vue()],
+  plugins: [react()],
   build: {
     target: "esnext",
     outDir: "../public",
@@ -41,7 +41,7 @@ export default defineConfig({
     assetsDir: "assets/",
     manifest: true,
     rollupOptions: {
-      input: path.join(__dirname, "src/app/domain/web/resources/main.ts"),
+      input: path.join(__dirname, "src/app/domain/web/resources/index.html"),
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
