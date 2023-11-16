@@ -13,6 +13,7 @@ vite = VitePlugin(
         static_dir=settings.STATIC_DIR,
         templates_dir=settings.TEMPLATES_DIR,
         hot_reload=settings.app.DEV_MODE,
+        is_react=True,
         port=3005,
     ),
 )
