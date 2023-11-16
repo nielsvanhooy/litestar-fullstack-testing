@@ -31,6 +31,7 @@ dependencies = [
     "gufo-ping>=0.3.0",
     "phantom-communicator @ git+https://github.com/nielsvanhooy/phantom_communicator.git",
     "fastapi-mail @ git+https://github.com/nielsvanhooy/litestar-mail.git",
+    "httpx-ws>=0.4.2",
 ]
 description = "Opinionated template for a Litestar application."
 keywords = [
@@ -57,7 +58,7 @@ Issue = "https://github.com/litestar-org/litestar-fullstack/issues/"
 Source = "https://github.com/litestar-org/litestar-fullstack"
 
 [project.scripts]
-app = "litestar.__main__:run_cli"
+app = "app.__main__:run_cli"
 
 [project.entry-points."litestar.commands"]
 non-default-db-commands = "app.cli:database_management_app"
@@ -82,12 +83,16 @@ include = [
 packages = ["src/app"]
 
 [tool.pdm.scripts]
+lint = "pdm run pre-commit run --all-files"
 post_install = "pdm run python scripts/pre-build.py"
 pre_build = "pdm run python scripts/pre-build.py"
+test = "pdm run pytest tests"
+test_coverage = {composite = ["pdm run pytest tests", "pdm run coverage html", "pdm run coverage xml"]}
 
 [tool.pdm.dev-dependencies]
 dev = [
-  "nodeenv",
+    "nodeenv",
+    "anyio>=4.0.0",
 ]
 docs = [
   "mkdocs",
@@ -113,14 +118,10 @@ linting = [
 test = [
   "pytest>=7.4.1",
   "pytest-xdist>=3.3.1",
-  "pytest-asyncio",
   "pytest-lazy-fixture>=0.6.3",
-  "pytest-asyncio>=0.21.1",
   "pytest-mock>=3.11.1",
   "pytest-cov",
   "coverage",
-  "time-machine>=2.12.0",
-  "httpx>=0.24.1",
   "pytest-dotenv",
 ]
 
@@ -163,7 +164,6 @@ omit = ["tests/*", "**/*/migrations/**/*.py", "scripts/*"]
 
 [tool.pytest.ini_options]
 addopts = ["-ra", "--ignore", "migrations"]
-asyncio_mode = "auto"
 env_files = [".env.testing"]
 env_override_existing_values = 1
 filterwarnings = [

@@ -1,7 +1,12 @@
 from typing import TYPE_CHECKING
 
+import pytest
+
 if TYPE_CHECKING:
     from httpx import AsyncClient
+
+pytestmark = pytest.mark.anyio
+
 
 
 async def test_cpe_product_configurations_list(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:

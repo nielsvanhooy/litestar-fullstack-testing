@@ -114,7 +114,7 @@ class CpeProductConfigurationController(Controller):
     ) -> CPEProductConfiguration:
         """Update a CPE Product Configuration"""
         obj = data.create_instance()
-        db_obj = await cpes_product_config_service.update(product_configuration_id, obj.__dict__)
+        db_obj = await cpes_product_config_service.update(item_id=product_configuration_id, data=obj.__dict__)
         return cpes_product_config_service.to_dto(db_obj)
 
     @delete(

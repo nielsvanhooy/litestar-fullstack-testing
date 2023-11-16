@@ -1,9 +1,12 @@
+from litestar.contrib.pydantic import PydanticPlugin
 from litestar_aiosql import AiosqlConfig, AiosqlPlugin
 from litestar_saq import QueueConfig, SAQConfig, SAQPlugin
 from litestar_vite import ViteConfig, VitePlugin
 
 from app.domain.domain_tasks import background_tasks, cron_background_tasks, cron_system_tasks, system_tasks
 from app.lib import settings
+
+pydantic = PydanticPlugin(prefer_alias=True)
 
 aiosql = AiosqlPlugin(config=AiosqlConfig())
 

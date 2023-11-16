@@ -102,7 +102,7 @@ class CpeVendorController(Controller):
     ) -> CPEVendor:
         """Update a cpe vendor"""
         obj = data.create_instance()
-        db_obj = await cpes_vendor_service.update(vendor_id, obj.__dict__)
+        db_obj = await cpes_vendor_service.update(item_id=vendor_id, data=obj.__dict__)
         return cpes_vendor_service.to_dto(db_obj)
 
     @delete(

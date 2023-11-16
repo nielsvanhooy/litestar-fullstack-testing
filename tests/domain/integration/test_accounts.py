@@ -1,7 +1,12 @@
 from typing import TYPE_CHECKING
 
+import pytest
+
 if TYPE_CHECKING:
     from httpx import AsyncClient
+
+
+pytestmark = pytest.mark.anyio
 
 
 async def test_update_user_no_auth(client: "AsyncClient") -> None:
@@ -18,6 +23,12 @@ async def test_update_user_no_auth(client: "AsyncClient") -> None:
     assert response.status_code == 401
     response = await client.delete("/api/users/97108ac1-ffcb-411d-8b1e-d9183399f63b")
     assert response.status_code == 401
+
+
+async def test_accounts_list(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
+    response = await client.get("/api/users", headers=superuser_token_headers)
+    assert response.status_code == 200
+    assert int(response.json()["total"]) > 0
 
 
 async def test_accounts_with_incorrect_role(client: "AsyncClient", user_token_headers: dict[str, str]) -> None:
@@ -39,12 +50,6 @@ async def test_accounts_with_incorrect_role(client: "AsyncClient", user_token_he
     assert response.status_code == 403
     response = await client.delete("/api/users/97108ac1-ffcb-411d-8b1e-d9183399f63b", headers=user_token_headers)
     assert response.status_code == 403
-
-
-async def test_accounts_list(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
-    response = await client.get("/api/users", headers=superuser_token_headers)
-    assert response.status_code == 200
-    assert int(response.json()["total"]) > 0
 
 
 async def test_accounts_get(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:

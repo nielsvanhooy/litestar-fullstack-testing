@@ -27,9 +27,6 @@ services:
     build:
       context: .
       dockerfile: deploy/docker/dev/Dockerfile
-      args:
-        # remove this to build for production.
-        PDM_INSTALL_ARGS: -G:all
     image: app:latest-dev
     command: litestar run --reload
     restart: always

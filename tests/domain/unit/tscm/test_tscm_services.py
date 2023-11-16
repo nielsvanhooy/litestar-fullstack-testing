@@ -1,11 +1,14 @@
 from typing import TYPE_CHECKING
 
+import pytest
 from app.domain.tscm.dependencies import provides_tscm_service
 from app.lib.db.base import session
 
 if TYPE_CHECKING:
     from app.domain.tscm.tscm import CpeTscmCheck
 
+
+pytestmark = pytest.mark.anyio
 
 # async def test_perform_tscm_check(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
 

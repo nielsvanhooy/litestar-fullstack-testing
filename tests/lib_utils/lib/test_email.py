@@ -1,6 +1,9 @@
+import pytest
 from pathlib import Path
 
 from app.lib.email import mail_system, send_email
+
+pytestmark = pytest.mark.anyio
 
 
 async def test_send_email() -> None:

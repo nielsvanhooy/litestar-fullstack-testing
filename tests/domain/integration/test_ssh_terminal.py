@@ -1,12 +1,15 @@
 from typing import TYPE_CHECKING
 import aiohttp
 import httpx
+import pytest
 from httpx_ws import aconnect_ws
 from httpx_ws.transport import ASGIWebSocketTransport
 
 from httpx import AsyncClient
 if TYPE_CHECKING:
     from httpx import AsyncClient
+
+pytestmark = pytest.mark.anyio
 
 
 async def test_ssh_terminal(app, superuser_token_headers: dict[str, str]) -> None:

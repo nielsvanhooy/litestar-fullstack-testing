@@ -108,7 +108,7 @@ class TscmController(Controller):
     ) -> TSCMCheck:
         """Update a TSCM check"""
         obj = data.create_instance()
-        db_obj = await tscm_service.update(tscm_check_id, obj.__dict__)
+        db_obj = await tscm_service.update(item_id=tscm_check_id, data=obj.__dict__)
         return tscm_service.to_dto(db_obj)
 
     @delete(

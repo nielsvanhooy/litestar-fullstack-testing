@@ -30,6 +30,14 @@ if TYPE_CHECKING:
     from app.domain.tscm.models import TSCMCheck
 
 
+pytestmark = pytest.mark.anyio
+
+
+@pytest.fixture
+def anyio_backend() -> str:
+    return "asyncio"
+
+
 @pytest.fixture(scope="session")
 def event_loop() -> "abc.Iterator[asyncio.AbstractEventLoop]":
     """Scoped Event loop.

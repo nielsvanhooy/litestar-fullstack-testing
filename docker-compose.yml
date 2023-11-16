@@ -75,7 +75,7 @@ services:
 
   worker:
     image: app:latest
-    command: litestar workers run
+    command: wait-for-redis && litestar workers run
     restart: always
     depends_on:
       db:

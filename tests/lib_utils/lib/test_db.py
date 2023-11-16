@@ -5,6 +5,8 @@ import random
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
+
+import pytest
 from advanced_alchemy.extensions.litestar.plugins.init.config.asyncio import autocommit_before_send_handler
 from advanced_alchemy.extensions.litestar.plugins.init.config.common import SESSION_SCOPE_KEY
 from litestar.constants import SCOPE_STATE_NAMESPACE
@@ -13,6 +15,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 if TYPE_CHECKING:
     from litestar import Litestar
     from litestar.types import HTTPResponseStartEvent, HTTPScope
+
+
+pytestmark = pytest.mark.anyio
 
 
 async def test_before_send_handler_success_response(

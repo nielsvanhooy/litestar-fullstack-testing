@@ -14,7 +14,7 @@ from app.domain.tscm.models import TSCMCheck, TSCMCheckResult
 from app.lib import settings
 from app.lib.dependencies import FilterTypes
 from app.lib.repository import SQLAlchemyAsyncRepository
-from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
+from app.lib.service import SQLAlchemyAsyncRepositoryService
 
 __all__ = ["TscmService", "TscmRepository", "TscmCheckResultService", "TscmCheckResultRepository"]
 

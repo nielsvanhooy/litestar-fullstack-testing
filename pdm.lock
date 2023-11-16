@@ -5,7 +5,7 @@
 groups = ["default", "dev", "docs", "linting", "test"]
 strategy = ["cross_platform"]
 lock_version = "4.4"
-content_hash = "sha256:49dc93f1431cd5a90e0ca81f04e6a36f739af39ffe8f7219bca004c6710b4af4"
+content_hash = "sha256:8b5d5a909e902640e1843c49332789a549e1ad7469e3cc29f43537371824e8cc"
 
 [[package]]
 name = "advanced-alchemy"
@@ -847,16 +847,18 @@ files = [
 
 [[package]]
 name = "httpcore"
-version = "1.0.2"
-requires_python = ">=3.8"
+version = "0.17.3"
+requires_python = ">=3.7"
 summary = "A minimal low-level HTTP client."
 dependencies = [
+    "anyio<5.0,>=3.0",
     "certifi",
     "h11<0.15,>=0.13",
+    "sniffio==1.*",
 ]
 files = [
-    {file = "httpcore-1.0.2-py3-none-any.whl", hash = "sha256:096cc05bca73b8e459a1fc3dcf585148f63e534eae4339559c9b8a8d6399acc7"},
-    {file = "httpcore-1.0.2.tar.gz", hash = "sha256:9fc092e4799b26174648e54b74ed5f683132a464e95643b226e00c2ed2fa6535"},
+    {file = "httpcore-0.17.3-py3-none-any.whl", hash = "sha256:c2789b767ddddfa2a5782e3199b2b7f6894540b17b16ec26b2c4d8e103510b87"},
+    {file = "httpcore-0.17.3.tar.gz", hash = "sha256:a6f30213335e34c1ade7be6ec7c47f19f50c56db36abef1a9dfa3815b1cb3888"},
 ]
 
 [[package]]
@@ -897,6 +899,22 @@ dependencies = [
 files = [
     {file = "httpx-0.25.1-py3-none-any.whl", hash = "sha256:fec7d6cc5c27c578a391f7e87b9aa7d3d8fbcd034f6399f9f79b45bcc12a866a"},
     {file = "httpx-0.25.1.tar.gz", hash = "sha256:ffd96d5cf901e63863d9f1b4b6807861dbea4d301613415d9e6e57ead15fc5d0"},
+]
+
+[[package]]
+name = "httpx-ws"
+version = "0.4.2"
+requires_python = ">=3.8"
+summary = "WebSockets support for HTTPX"
+dependencies = [
+    "anyio",
+    "httpcore<0.18,>=0.17.3",
+    "httpx>=0.23.1",
+    "wsproto",
+]
+files = [
+    {file = "httpx_ws-0.4.2-py3-none-any.whl", hash = "sha256:9f239457d7ea2e76cfce849d2775fa27a85430d1bc4910ab5f543f37283a1008"},
+    {file = "httpx_ws-0.4.2.tar.gz", hash = "sha256:7096e15716dcb9235097dd2dd7aa389badd43ed60e1cd221288102fcd886be83"},
 ]
 
 [[package]]
@@ -2245,41 +2263,6 @@ files = [
 ]
 
 [[package]]
-name = "time-machine"
-version = "2.13.0"
-requires_python = ">=3.8"
-summary = "Travel through time in your tests."
-dependencies = [
-    "python-dateutil",
-]
-files = [
-    {file = "time_machine-2.13.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:e9a9d150e098be3daee5c9f10859ab1bd14a61abebaed86e6d71f7f18c05b9d7"},
-    {file = "time_machine-2.13.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:2bd4169b808745d219a69094b3cb86006938d45e7293249694e6b7366225a186"},
-    {file = "time_machine-2.13.0-cp311-cp311-macosx_13_0_arm64.whl", hash = "sha256:8d526cdcaca06a496877cfe61cc6608df2c3a6fce210e076761964ebac7f77cc"},
-    {file = "time_machine-2.13.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cfef4ebfb4f055ce3ebc7b6c1c4d0dbfcffdca0e783ad8c6986c992915a57ed3"},
-    {file = "time_machine-2.13.0-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:9f128db8997c3339f04f7f3946dd9bb2a83d15e0a40d35529774da1e9e501511"},
-    {file = "time_machine-2.13.0-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:21bef5854d49b62e2c33848b5c3e8acf22a3b46af803ef6ff19529949cb7cf9f"},
-    {file = "time_machine-2.13.0-cp311-cp311-musllinux_1_1_aarch64.whl", hash = "sha256:32b71e50b07f86916ac04bd1eefc2bd2c93706b81393748b08394509ee6585dc"},
-    {file = "time_machine-2.13.0-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:1ac8ff145c63cd0dcfd9590fe694b5269aacbc130298dc7209b095d101f8cdde"},
-    {file = "time_machine-2.13.0-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:19a3b10161c91ca8e0fd79348665cca711fd2eac6ce336ff9e6b447783817f93"},
-    {file = "time_machine-2.13.0-cp311-cp311-win32.whl", hash = "sha256:5f87787d562e42bf1006a87eb689814105b98c4d5545874a281280d0f8b9a2d9"},
-    {file = "time_machine-2.13.0-cp311-cp311-win_amd64.whl", hash = "sha256:62fd14a80b8b71726e07018628daaee0a2e00937625083f96f69ed6b8e3304c0"},
-    {file = "time_machine-2.13.0-cp311-cp311-win_arm64.whl", hash = "sha256:e9935aff447f5400a2665ab10ed2da972591713080e1befe1bb8954e7c0c7806"},
-    {file = "time_machine-2.13.0-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:34dcdbbd25c1e124e17fe58050452960fd16a11f9d3476aaa87260e28ecca0fd"},
-    {file = "time_machine-2.13.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:e58d82fe0e59d6e096ada3281d647a2e7420f7da5453b433b43880e1c2e8e0c5"},
-    {file = "time_machine-2.13.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:71acbc1febbe87532c7355eca3308c073d6e502ee4ce272b5028967847c8e063"},
-    {file = "time_machine-2.13.0-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:dec0ec2135a4e2a59623e40c31d6e8a8ae73305ade2634380e4263d815855750"},
-    {file = "time_machine-2.13.0-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4e3a2611f8788608ebbcb060a5e36b45911bc3b8adc421b1dc29d2c81786ce4d"},
-    {file = "time_machine-2.13.0-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:42ef5349135626ad6cd889a0a81400137e5c6928502b0817ea9e90bb10702000"},
-    {file = "time_machine-2.13.0-cp312-cp312-musllinux_1_1_i686.whl", hash = "sha256:6c16d90a597a8c2d3ce22d6be2eb3e3f14786974c11b01886e51b3cf0d5edaf7"},
-    {file = "time_machine-2.13.0-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:4f2ae8d0e359b216b695f1e7e7256f208c390db0480601a439c5dd1e1e4e16ce"},
-    {file = "time_machine-2.13.0-cp312-cp312-win32.whl", hash = "sha256:f5fa9610f7e73fff42806a2ed8b06d862aa59ce4d178a52181771d6939c3e237"},
-    {file = "time_machine-2.13.0-cp312-cp312-win_amd64.whl", hash = "sha256:02b33a8c19768c94f7ffd6aa6f9f64818e88afce23250016b28583929d20fb12"},
-    {file = "time_machine-2.13.0-cp312-cp312-win_arm64.whl", hash = "sha256:0cc116056a8a2a917a4eec85661dfadd411e0d8faae604ef6a0e19fe5cd57ef1"},
-    {file = "time_machine-2.13.0.tar.gz", hash = "sha256:c23b2408e3adcedec84ea1131e238f0124a5bc0e491f60d1137ad7239b37c01a"},
-]
-
-[[package]]
 name = "tomlkit"
 version = "0.12.3"
 requires_python = ">=3.7"
@@ -2576,6 +2559,19 @@ files = [
     {file = "websockets-12.0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:2cb388a5bfb56df4d9a406783b7f9dbefb888c09b71629351cc6b036e9259370"},
     {file = "websockets-12.0-py3-none-any.whl", hash = "sha256:dc284bbc8d7c78a6c69e0c7325ab46ee5e40bb4d50e494d8131a07ef47500e9e"},
     {file = "websockets-12.0.tar.gz", hash = "sha256:81df9cbcbb6c260de1e007e58c011bfebe2dafc8435107b0537f393dd38c8b1b"},
+]
+
+[[package]]
+name = "wsproto"
+version = "1.2.0"
+requires_python = ">=3.7.0"
+summary = "WebSockets state-machine based protocol implementation"
+dependencies = [
+    "h11<1,>=0.9.0",
+]
+files = [
+    {file = "wsproto-1.2.0-py3-none-any.whl", hash = "sha256:b9acddd652b585d75b20477888c56642fdade28bdfd3579aa24a4d2c037dd736"},
+    {file = "wsproto-1.2.0.tar.gz", hash = "sha256:ad565f26ecb92588a3e43bc3d96164de84cd9902482b130d0ddbaa9664a85065"},
 ]
 
 [[package]]

@@ -1,5 +1,8 @@
+import pytest
 from app.domain.cpe.dependencies import provides_cpe_service
 from app.lib.db.base import session
+
+pytestmark = pytest.mark.anyio
 
 
 ######## refactor this back to the unit test part but for now its ok

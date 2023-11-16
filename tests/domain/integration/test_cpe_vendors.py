@@ -1,7 +1,12 @@
 from typing import TYPE_CHECKING
 
+import pytest
+
 if TYPE_CHECKING:
     from httpx import AsyncClient
+
+pytestmark = pytest.mark.anyio
+
 
 
 async def test_cpes_vendors_not_superuser(client: "AsyncClient", user_token_headers: dict[str, str]) -> None:

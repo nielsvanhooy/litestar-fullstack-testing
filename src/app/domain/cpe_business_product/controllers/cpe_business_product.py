@@ -108,7 +108,7 @@ class CpeBusinessProductController(Controller):
     ) -> CPEBusinessProduct:
         """Update a business product"""
         obj = data.create_instance()
-        db_obj = await cpes_business_service.update(product_id, obj.__dict__)
+        db_obj = await cpes_business_service.update(item_id=product_id, data=obj.__dict__)
         return cpes_business_service.to_dto(db_obj)
 
     @delete(

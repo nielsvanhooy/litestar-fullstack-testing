@@ -5,7 +5,7 @@ from typing import Any
 from app.domain.cpe_product_configuration.models import CPEProductConfiguration
 from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
 from app.lib.repository import SQLAlchemyAsyncRepository
-from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
+from app.lib.service import SQLAlchemyAsyncRepositoryService
 
 __all__ = ["CPEProductConfigurationService", "CPEProductConfigurationRepository"]
 

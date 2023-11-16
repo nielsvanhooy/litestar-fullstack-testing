@@ -18,6 +18,8 @@ from app.lib.exceptions import ApplicationError
 if TYPE_CHECKING:
     from collections import abc
 
+pytestmark = pytest.mark.anyio
+
 
 def test_after_exception_hook_handler_called(monkeypatch: pytest.MonkeyPatch) -> None:
     """Tests that the handler gets added to the app and called."""

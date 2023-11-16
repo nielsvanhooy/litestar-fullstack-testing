@@ -1,13 +1,12 @@
 from typing import TYPE_CHECKING
 
+import pytest
 from litestar.config.response_cache import default_cache_key_builder
 from litestar.testing import RequestFactory
 
 from app.lib import cache, settings
 
-if TYPE_CHECKING:
-    import pytest
-
+pytestmark = pytest.mark.anyio
 
 def test_cache_key_builder(monkeypatch: "pytest.MonkeyPatch") -> None:
     monkeypatch.setattr(settings.AppSettings, "slug", "the-slug")

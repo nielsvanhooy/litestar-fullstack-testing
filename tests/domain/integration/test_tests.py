@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING, cast
 
+
+import pytest
 from httpx import AsyncClient
 from litestar import get
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,6 +13,8 @@ if TYPE_CHECKING:
     from litestar.stores.redis import RedisStore
     from redis.asyncio import Redis as AsyncRedis
     from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
+
+pytestmark = pytest.mark.anyio
 
 
 def test_cache_on_app(app: "Litestar", redis: "AsyncRedis") -> None:
@@ -44,6 +48,7 @@ def test_sessionmaker(app: "Litestar", sessionmaker: "async_sessionmaker[AsyncSe
     assert db.base.async_session_factory is sessionmaker
 
 
+@pytest.mark.anyio
 async def test_db_session_dependency(app: "Litestar", engine: "AsyncEngine") -> None:
     """Test that handlers receive session attached to patched engine.
 

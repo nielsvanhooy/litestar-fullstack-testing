@@ -19,7 +19,6 @@ from app.domain.cpe_vendor.models import CPEVendor
 from app.domain.tags.models import Tag
 from app.domain.teams.models import Team
 from app.domain.tscm.models import TSCMCheck
-from app.lib.service.generic import Service
 
 from . import (
     accounts,
@@ -93,7 +92,6 @@ __all__ = [
 
 
 signature_namespace: Mapping[str, Any] = {
-    "Service": Service,
     "UUID": UUID,
     "User": User,
     "Team": Team,

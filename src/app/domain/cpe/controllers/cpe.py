@@ -99,7 +99,7 @@ class CpeController(Controller):
     ) -> CPE:
         """Update a CPE"""
         obj = data.create_instance()
-        db_obj = await cpes_service.update(device_id, obj.__dict__)
+        db_obj = await cpes_service.update(item_id=device_id, data=obj.__dict__)
         return cpes_service.to_dto(db_obj)
 
     @delete(

@@ -9,7 +9,7 @@ from app.domain.cpe_business_product.dependencies import provides_cpe_business_s
 from app.domain.cpe_product_configuration.dependencies import provides_product_config_service
 from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
 from app.lib.repository import SQLAlchemyAsyncRepository
-from app.lib.service.sqlalchemy import SQLAlchemyAsyncRepositoryService
+from app.lib.service import SQLAlchemyAsyncRepositoryService
 
 from .models import CPE
 
