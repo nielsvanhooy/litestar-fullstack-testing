@@ -41,7 +41,7 @@ export default defineConfig({
     assetsDir: "assets/",
     manifest: true,
     rollupOptions: {
-      input: path.join(__dirname, "src/app/domain/web/resources/main.jsx"),
+      input: path.join(__dirname, "src/app/domain/web/resources/index.html"),
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
