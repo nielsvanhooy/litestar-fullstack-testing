@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 from sqlalchemy import select
 from sqlalchemy.orm import load_only
@@ -12,6 +12,9 @@ from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service import SQLAlchemyAsyncRepositoryService
 
 from .models import CPE
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 __all__ = ["CPEService", "CpeRepository"]
 
@@ -44,13 +47,19 @@ class CPEService(SQLAlchemyAsyncRepositoryService[CPE]):
             data_vendor_id = data.get("vendor", None)
             data_prd_config_id = data.get("product_configuration", None)
 
-        business_service = await anext(provides_cpe_business_service(db_session=self.repository.session))
+        business_service = await anext(
+            provides_cpe_business_service(db_session=cast("AsyncSession", self.repository.session)),
+        )
         business_product = await business_service.get(data_business_product_id, id_attribute="name")
 
-        vendor_service = await anext(provides_cpe_vendor_service(db_session=self.repository.session))
+        vendor_service = await anext(
+            provides_cpe_vendor_service(db_session=cast("AsyncSession", self.repository.session)),
+        )
         vendor_product = await vendor_service.get(data_vendor_id, id_attribute="name")
 
-        prd_config_service = await anext(provides_product_config_service(db_session=self.repository.session))
+        prd_config_service = await anext(
+            provides_product_config_service(db_session=cast("AsyncSession", self.repository.session)),
+        )
         prd_config = await prd_config_service.get(data_prd_config_id, id_attribute="configuration_id")
 
         db_obj = await self.to_model(data, "create")

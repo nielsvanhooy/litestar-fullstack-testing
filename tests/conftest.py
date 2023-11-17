@@ -38,14 +38,6 @@ def anyio_backend() -> str:
     return "asyncio"
 
 
-pytestmark = pytest.mark.anyio
-
-
-@pytest.fixture
-def anyio_backend() -> str:
-    return "asyncio"
-
-
 @pytest.fixture(scope="session")
 def event_loop() -> "abc.Iterator[asyncio.AbstractEventLoop]":
     """Scoped Event loop.

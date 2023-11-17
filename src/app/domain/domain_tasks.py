@@ -1,5 +1,3 @@
-from collections.abc import Callable
-
 from litestar_saq import CronJob
 
 from app.domain.system import tasks
@@ -14,7 +12,7 @@ domain_system_tasks: list = []
 domain_cron_system_tasks: list = []
 
 
-domain_background_tasks: list[Callable] = [
+domain_background_tasks: list = [
     cpe.business_logic.communicate_with_cpe,
     cpe.business_logic_ping._ping,
 ]

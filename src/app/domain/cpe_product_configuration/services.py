@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 from app.domain.cpe_product_configuration.models import CPEProductConfiguration
 from app.domain.cpe_vendor.dependencies import provides_cpe_vendor_service
 from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service import SQLAlchemyAsyncRepositoryService
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 __all__ = ["CPEProductConfigurationService", "CPEProductConfigurationRepository"]
 
@@ -29,7 +32,9 @@ class CPEProductConfigurationService(SQLAlchemyAsyncRepositoryService[CPEProduct
         if isinstance(data, dict):
             data_vendor_id = data.get("vendor", None)
 
-        vendor_service = await anext(provides_cpe_vendor_service(db_session=self.repository.session))
+        vendor_service = await anext(
+            provides_cpe_vendor_service(db_session=cast("AsyncSession", self.repository.session)),
+        )
         vendor_product = await vendor_service.get(data_vendor_id, id_attribute="name")
 
         db_obj = await self.to_model(data, "create")

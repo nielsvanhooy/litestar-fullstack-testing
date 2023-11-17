@@ -40,7 +40,7 @@ async def perform_tscm_check(
     device_id: str,
     selected_check: str | None = None,
     test_run: bool = False,
-) -> list[TSCMCheck]:  # type: ignore
+) -> list[TSCMCheck]:
     from app.domain.plugins import saq
 
     queue = saq.get_queue("background-tasks")

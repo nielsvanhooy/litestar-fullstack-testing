@@ -1,5 +1,5 @@
 import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 from advanced_alchemy.filters import BeforeAfter, LimitOffset
 from sqlalchemy import and_, select
@@ -15,6 +15,9 @@ from app.lib import settings
 from app.lib.dependencies import FilterTypes
 from app.lib.repository import SQLAlchemyAsyncRepository
 from app.lib.service import SQLAlchemyAsyncRepositoryService
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 __all__ = ["TscmService", "TscmRepository", "TscmCheckResultService", "TscmCheckResultRepository"]
 
@@ -88,10 +91,14 @@ class TscmService(SQLAlchemyAsyncRepositoryService[TSCMCheck]):
             data_business_product_id = data.get("business_service", None)
             data_vendor_id = data.get("vendor", None)
 
-        business_service = await anext(provides_cpe_business_service(db_session=self.repository.session))
+        business_service = await anext(
+            provides_cpe_business_service(db_session=cast("AsyncSession", self.repository.session)),
+        )
         business_product = await business_service.get(data_business_product_id, id_attribute="name")
 
-        vendor_service = await anext(provides_cpe_vendor_service(db_session=self.repository.session))
+        vendor_service = await anext(
+            provides_cpe_vendor_service(db_session=cast("AsyncSession", self.repository.session)),
+        )
         vendor_product = await vendor_service.get(data_vendor_id, id_attribute="name")
 
         db_obj = await self.to_model(data, "create")
@@ -183,7 +190,7 @@ class TscmCheckResultService(SQLAlchemyAsyncRepositoryService[TSCMCheckResult]):
         if isinstance(data, dict):
             data_device_id = data.get("device_id", None)
 
-        cpe_service = await anext(provides_cpe_service(db_session=self.repository.session))
+        cpe_service = await anext(provides_cpe_service(db_session=cast("AsyncSession", self.repository.session)))
         cpe = await cpe_service.get(data_device_id, id_attribute="device_id")
 
         db_obj = await self.to_model(data, "create")

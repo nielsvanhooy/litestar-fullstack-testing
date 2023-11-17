@@ -34,7 +34,7 @@ def create_app() -> Litestar:
         dependencies=dependencies,
         exception_handlers={
             exceptions.ApplicationError: exceptions.exception_to_http_response,
-            exceptions.ConflictError: exceptions.exception_to_http_response,  # type: ignore[dict-item]
+            exceptions.ConflictError: exceptions.exception_to_http_response,
             RepositoryError: exceptions.exception_to_http_response,
         },
         debug=settings.app.DEBUG,

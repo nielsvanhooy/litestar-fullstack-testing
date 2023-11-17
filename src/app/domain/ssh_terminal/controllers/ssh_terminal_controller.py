@@ -4,7 +4,7 @@ from __future__ import annotations
 from io import StringIO
 
 import asyncssh
-from litestar import Controller, WebSocket, websocket_listener
+from litestar import Controller, WebSocket
 from litestar.di import Provide
 from litestar.handlers.websocket_handlers import websocket_listener
 
@@ -45,6 +45,7 @@ class SshWebTerminalController(Controller):
             sshex_task = asyncio.create_task(sshExReader.read(1024))
             ws_task = asyncio.create_task(socket.receive_data(mode="text"))
 
+            sshWriter.writelines(["term len 0\n"])
             while True:
                 done, pending = await asyncio.wait([ws_task, ssh_task, sshex_task], return_when=asyncio.FIRST_COMPLETED)
 
@@ -66,25 +67,3 @@ class SshWebTerminalController(Controller):
                     data = sshex_task.result()
                     await socket.send_data(data)
                     ssh_task = asyncio.create_task(sshExReader.read(1024))
-
-                #     elif msg.type == aiohttp.WSMsgType.CLOSE:
-                #         conn.close()
-                #         await conn.wait_closed()
-                #         break
-                #     elif msg.type == aiohttp.WSMsgType.ERROR:
-                #         print('ws connection closed with exception %s' %
-                #               ws.exception())
-                #         conn.close()
-                #         await conn.wait_closed()
-                #         break
-                #
-                # if ssh_task in done:
-                #     data = ssh_task.result()
-                #     print(data)
-                #     await ws.send_str(data)
-                #     ssh_task = app.loop.create_task(sshReader.read(1024))
-                # if sshex_task in done:
-                #     data = sshex_task.result()
-                #     print(data)
-                #     await ws.send_str(data)
-                #     ssh_task = app.loop.create_task(sshExReader.read(1024))

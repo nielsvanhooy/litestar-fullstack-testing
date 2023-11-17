@@ -30,12 +30,6 @@ async def test_accounts_list(client: "AsyncClient", superuser_token_headers: dic
     assert int(response.json()["total"]) > 0
 
 
-async def test_accounts_list(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
-    response = await client.get("/api/users", headers=superuser_token_headers)
-    assert response.status_code == 200
-    assert int(response.json()["total"]) > 0
-
-
 async def test_accounts_get(client: "AsyncClient", superuser_token_headers: dict[str, str]) -> None:
     response = await client.get("/api/users/97108ac1-ffcb-411d-8b1e-d9183399f63b", headers=superuser_token_headers)
     assert response.status_code == 200
